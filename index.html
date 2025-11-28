@@ -64,8 +64,8 @@
         <div class="container mx-auto px-4">
             <div class="absolute top-4 right-4">
                 <div class="flex gap-2">
-                    <button id="langKo" onclick="setLanguage('ko')" class="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg font-medium transition-colors">Korean</button>
-                    <button id="langEn" onclick="setLanguage('en')" class="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg font-medium transition-colors">English</button>
+                    <button id="langKo" onclick="setLanguage('ko')" class="px-3.5 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg font-medium transition-colors text-[90%]">Korean</button>
+                    <button id="langEn" onclick="setLanguage('en')" class="px-3.5 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg font-medium transition-colors text-[90%]">English</button>
                 </div>
             </div>
             <h1 class="text-4xl font-bold mb-2" data-ko="2026학년도 한국 대학수학능력시험-수학 LLM 평가 리더보드" data-en="2026 Korean College Scholastic Ability Math-Test LLM Evaluation Leaderboard">2026학년도 한국 대학수학능력시험 LLM 평가 리더보드</h1>
@@ -529,40 +529,40 @@
                         <div class="text-gray-700 leading-relaxed space-y-4">
                             <div>
                                 <h4 class="font-semibold mb-2" data-ko="평가 모드" data-en="Evaluation Modes">평가 모드</h4>
-                                <p class="text-sm mb-3" data-ko="본 리더보드는 프롬프트 언어 2가지 (한국어, 영어) × 입력 모달리티 3가지 (텍스트, 이미지, 텍스트+이미지) = 총 6가지 평가 모드를 지원합니다." 
-                                   data-en="This leaderboard supports 2 Prompt Languages (Korean, English) × 3 Input Modalities (Text, Image, Text+Image) = 6 Total Evaluation Modes.">
-                                    본 리더보드는 <strong>프롬프트 언어 2가지 (한국어, 영어) × 입력 모달리티 3가지 (텍스트, 이미지, 텍스트+이미지) = 총 6가지 평가 모드</strong>를 지원합니다.
+                                <p class="text-sm mb-3" data-ko="본 리더보드는 프롬프트 언어 2가지 (한국어, 영어) × 입력 모달리티 3가지 (Text-only, Image-only, Text+Figure) = 총 6가지 평가 모드를 지원합니다." 
+                                   data-en="This leaderboard supports 2 Prompt Languages (Korean, English) × 3 Input Modalities (Text-only, Image-only, Text+Figure) = 6 Total Evaluation Modes.">
+                                    본 리더보드는 <strong>프롬프트 언어 2가지 (한국어, 영어) × 입력 모달리티 3가지 (Text-only, Image-only, Text+Figure) = 총 6가지 평가 모드</strong>를 지원합니다.
                                 </p>
                                 <ul class="list-disc list-inside text-sm space-y-1 ml-4">
-                                    <li data-ko="1. 한국어 텍스트 입력: 프롬프트를 한국어로 작성하고, 문제를 LaTeX 형식의 텍스트로 입력" 
-                                        data-en="1. Korean Text Input: Prompt is written in Korean, and problems are input as LaTeX-formatted text">1. 한국어 텍스트 입력: 프롬프트를 한국어로 작성하고, 문제를 LaTeX 형식의 텍스트로 입력</li>
-                                    <li data-ko="2. 한국어 이미지 입력: 프롬프트를 한국어로 작성하고, 문제 이미지를 입력" 
-                                        data-en="2. Korean Image Input: Prompt is written in Korean, and problem images are input">2. 한국어 이미지 입력: 프롬프트를 한국어로 작성하고, 문제 이미지를 입력</li>
-                                    <li data-ko="3. 한국어 텍스트+이미지 입력: 프롬프트를 한국어로 작성하고, LaTeX 텍스트와 문제 이미지를 함께 입력" 
-                                        data-en="3. Korean Text+Image Input: Prompt is written in Korean, and both LaTeX text and problem images are input together">3. 한국어 텍스트+이미지 입력: 프롬프트를 한국어로 작성하고, LaTeX 텍스트와 문제 이미지를 함께 입력</li>
-                                    <li data-ko="4. 영어 텍스트 입력: 프롬프트를 영어로 작성하고, 문제를 LaTeX 형식의 텍스트로 입력" 
-                                        data-en="4. English Text Input: Prompt is written in English, and problems are input as LaTeX-formatted text">4. 영어 텍스트 입력: 프롬프트를 영어로 작성하고, 문제를 LaTeX 형식의 텍스트로 입력</li>
-                                    <li data-ko="5. 영어 이미지 입력: 프롬프트를 영어로 작성하고, 문제 이미지를 입력" 
-                                        data-en="5. English Image Input: Prompt is written in English, and problem images are input">5. 영어 이미지 입력: 프롬프트를 영어로 작성하고, 문제 이미지를 입력</li>
-                                    <li data-ko="6. 영어 텍스트+이미지 입력: 프롬프트를 영어로 작성하고, LaTeX 텍스트와 문제 이미지를 함께 입력" 
-                                        data-en="6. English Text+Image Input: Prompt is written in English, and both LaTeX text and problem images are input together">6. 영어 텍스트+이미지 입력: 프롬프트를 영어로 작성하고, LaTeX 텍스트와 문제 이미지를 함께 입력</li>
+                                    <li data-ko="1. 한국어 Text-only 입력: 프롬프트를 한국어로 작성하고, 문제를 LaTeX 형식의 텍스트로 입력" 
+                                        data-en="1. Korean Text-only Input: Prompt is written in Korean, and problems are input as LaTeX-formatted text">1. 한국어 Text-only 입력: 프롬프트를 한국어로 작성하고, 문제를 LaTeX 형식의 텍스트로 입력</li>
+                                    <li data-ko="2. 한국어 Image-only 입력: 프롬프트를 한국어로 작성하고, 문제 이미지를 입력" 
+                                        data-en="2. Korean Image-only Input: Prompt is written in Korean, and problem images are input">2. 한국어 Image-only 입력: 프롬프트를 한국어로 작성하고, 문제 이미지를 입력</li>
+                                    <li data-ko="3. 한국어 Text+Figure 입력: 프롬프트를 한국어로 작성하고, LaTeX 텍스트와 문제 이미지를 함께 입력" 
+                                        data-en="3. Korean Text+Figure Input: Prompt is written in Korean, and both LaTeX text and problem images are input together">3. 한국어 Text+Figure 입력: 프롬프트를 한국어로 작성하고, LaTeX 텍스트와 문제 이미지를 함께 입력</li>
+                                    <li data-ko="4. 영어 Text-only 입력: 프롬프트를 영어로 작성하고, 문제를 LaTeX 형식의 텍스트로 입력" 
+                                        data-en="4. English Text-only Input: Prompt is written in English, and problems are input as LaTeX-formatted text">4. 영어 Text-only 입력: 프롬프트를 영어로 작성하고, 문제를 LaTeX 형식의 텍스트로 입력</li>
+                                    <li data-ko="5. 영어 Image-only 입력: 프롬프트를 영어로 작성하고, 문제 이미지를 입력" 
+                                        data-en="5. English Image-only Input: Prompt is written in English, and problem images are input">5. 영어 Image-only 입력: 프롬프트를 영어로 작성하고, 문제 이미지를 입력</li>
+                                    <li data-ko="6. 영어 Text+Figure 입력: 프롬프트를 영어로 작성하고, LaTeX 텍스트와 문제 이미지를 함께 입력" 
+                                        data-en="6. English Text+Figure Input: Prompt is written in English, and both LaTeX text and problem images are input together">6. 영어 Text+Figure 입력: 프롬프트를 영어로 작성하고, LaTeX 텍스트와 문제 이미지를 함께 입력</li>
                                 </ul>
                 </div>
                 
                             <div>
                                 <h4 class="font-semibold mb-2" data-ko="입력 형태 상세" data-en="Input Format Details">입력 형태 상세</h4>
                                 <ul class="list-disc list-inside text-sm space-y-2 ml-4">
-                                    <li data-ko="<strong>텍스트 입력 구성:</strong> 모든 문제를 표준화된 LaTeX 문법으로 변환하여 일관된 텍스트 형식 유지. 도형·그래프에 대한 별도 description은 생성하지 않음" 
-                                        data-en="<strong>Text Input Configuration:</strong> All problems are converted to standardized LaTeX syntax to maintain consistent text format. No separate description is generated for diagrams/graphs">
-                                        <strong>텍스트 입력 구성:</strong> 모든 문제를 표준화된 LaTeX 문법으로 변환하여 일관된 텍스트 형식 유지. 도형·그래프에 대한 별도 description은 생성하지 않음
+                                    <li data-ko="<strong>Text-only 입력 구성:</strong> 모든 문제를 표준화된 LaTeX 문법으로 변환하여 일관된 텍스트 형식 유지. 도형·그래프에 대한 별도 description은 생성하지 않음" 
+                                        data-en="<strong>Text-only Input Configuration:</strong> All problems are converted to standardized LaTeX syntax to maintain consistent text format. No separate description is generated for diagrams/graphs">
+                                        <strong>Text-only 입력 구성:</strong> 모든 문제를 표준화된 LaTeX 문법으로 변환하여 일관된 텍스트 형식 유지. 도형·그래프에 대한 별도 description은 생성하지 않음
                                     </li>
-                                    <li data-ko="<strong>이미지 입력 구성:</strong> 이미지 입력이 가능한 모델에는 해당 문항에 대한 이미지(문항단위)를 crop하여 제공. 문제 전체 페이지 이미지는 사용하지 않음" 
-                                        data-en="<strong>Image Input Configuration:</strong> For models that support image input, images of the corresponding questions (per question) are cropped and provided. Full-page problem images are not used">
-                                        <strong>이미지 입력 구성:</strong> 이미지 입력이 가능한 모델에는 해당 문항에 대한 이미지(문항단위)를 crop하여 제공. 문제 전체 페이지 이미지는 사용하지 않음
+                                    <li data-ko="<strong>Image-only 입력 구성:</strong> 이미지 입력이 가능한 모델에는 해당 문항에 대한 이미지(문항단위)를 crop하여 제공. 문제 전체 페이지 이미지는 사용하지 않음" 
+                                        data-en="<strong>Image-only Input Configuration:</strong> For models that support image input, images of the corresponding questions (per question) are cropped and provided. Full-page problem images are not used">
+                                        <strong>Image-only 입력 구성:</strong> 이미지 입력이 가능한 모델에는 해당 문항에 대한 이미지(문항단위)를 crop하여 제공. 문제 전체 페이지 이미지는 사용하지 않음
                                     </li>
-                                    <li data-ko="<strong>텍스트+이미지 입력 구성:</strong> 텍스트(LaTeX 표준화) + 도형 및 그래프 등 시각 요소만을 crop한 이미지를 함께 제공" 
-                                        data-en="<strong>Text+Image Input Configuration:</strong> Text (LaTeX standardized) + cropped images of visual elements such as diagrams and graphs are provided together">
-                                        <strong>텍스트+이미지 입력 구성:</strong> 텍스트(LaTeX 표준화) + 도형 및 그래프 등 시각 요소만을 crop한 이미지를 함께 제공
+                                    <li data-ko="<strong>Text+Figure 입력 구성:</strong> 텍스트(LaTeX 표준화) + 도형 및 그래프 등 시각 요소만을 crop한 이미지를 함께 제공" 
+                                        data-en="<strong>Text+Figure Input Configuration:</strong> Text (LaTeX standardized) + cropped images of visual elements such as diagrams and graphs are provided together">
+                                        <strong>Text+Figure 입력 구성:</strong> 텍스트(LaTeX 표준화) + 도형 및 그래프 등 시각 요소만을 crop한 이미지를 함께 제공
                                     </li>
                                 </ul>
                             </div>
@@ -2385,11 +2385,11 @@
                             // Input Modality에 따라 위치 조정
                             // text-only일 때는 -11, 나머지(Image-only, Text+Figure)일 때는 -18
                             const currentModality = chart.chartModality || 'Text';
-                            const lineY = currentModality === 'Text' ? barY - 11 : barY - 18;
+                            const lineY = currentModality === 'Text' ? barY - 9 : barY - 14;
                             
                             ctx.save();
                             ctx.strokeStyle = color;
-                            ctx.lineWidth = 3;
+                            ctx.lineWidth = 2;
                             ctx.beginPath();
                             ctx.moveTo(x0, lineY);
                             // 100을 넘어가는 경우에도 선은 그리되, 차트 영역 내에서만
