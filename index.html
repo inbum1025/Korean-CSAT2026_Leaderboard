@@ -462,7 +462,10 @@
 
         <!-- Latency & Performance Chart Section -->
         <section class="bg-white rounded-lg shadow-xl p-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6" data-ko="Latency & Performance" data-en="Latency & Performance">Latency & Performance</h2>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800" data-ko="Latency & Performance" data-en="Latency & Performance">Latency & Performance</h2>
+                <div id="latencyPerformanceDownloadBtn"></div>
+            </div>
             <p class="text-gray-600 mb-4 text-sm" 
                data-ko="각 모델의 응답 시간(Latency)과 성능(Performance)을 비교합니다. 아래 막대는 응답 시간(분), 위 선은 정규화된 점수를 나타냅니다. 이 차트는 전체 문제 카테고리(ALL)에서만 사용 가능합니다." 
                data-en="Compare response time (Latency) and performance for each model. The bottom bars show response time (minutes), and the top lines show normalized scores. This chart is only available for all problem categories (ALL).">
@@ -1865,7 +1868,7 @@
                         </p>
                     </div>
                     ` : ''}
-                    <div class="mb-4 flex gap-4 text-sm">
+                    <div class="mb-4 flex gap-4 text-sm flex-wrap">
                         <div class="flex items-center gap-2">
                             <div class="w-4 h-4 rounded bg-green-500"></div>
                             <span data-ko="90점 이상" data-en="90 score and above">90점 이상</span>
@@ -1878,27 +1881,29 @@
                             <div class="w-4 h-4 rounded bg-red-500"></div>
                             <span data-ko="70점 미만" data-en="Below 70 score">70점 미만</span>
                         </div>
-		    <div class="flex items-center gap-2">
-			<div
-			    class="w-4 h-4 rounded border border-gray-500"
-			    style="
-				background-image: repeating-linear-gradient(
-				    45deg,
-				    rgba(107,114,128,0.8) 0,
-				    rgba(107,114,128,0.8) 1px,
-				    transparent 1px,
-				    transparent 4px
-				);
-			    ">
-			</div>
-			<span data-ko="Closed 모델" data-en="Closed-weight model">Closed-weight model</span>
-		    </div>
-			<div class="flex items-center gap-2">
-			    <div
-				class="w-4 h-4 rounded border border-gray-500 bg-white-200">
-			    </div>
-			    <span data-ko="Open 모델" data-en="Open-weighted model">Open-weighted model</span>
-			</div>
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-4 h-4 rounded border border-gray-500"
+                                style="
+                                    background-image: repeating-linear-gradient(
+                                        45deg,
+                                        rgba(107,114,128,0.8) 0,
+                                        rgba(107,114,128,0.8) 1px,
+                                        transparent 1px,
+                                        transparent 4px
+                                    );
+                                ">
+                            </div>
+                            <span data-ko="Closed 모델" data-en="Closed-weight model">Closed-weight model</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-4 h-4 rounded border border-gray-500 bg-white-200">
+                            </div>
+                            <span data-ko="Open 모델" data-en="Open-weighted model">Open-weighted model</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-2" data-ko="괄호 안의 회색 숫자는 원점수(152점 만점)를 나타냅니다." data-en="Values in parentheses (gray) indicate raw scores (out of 152 points).">Values in parentheses (gray) indicate raw scores (out of 152 points).</p>
                     </div>
                     <div class="h-[600px]" style="position: relative;">
                         <canvas id="baselineChart"></canvas>
@@ -1952,6 +1957,11 @@
                 : category;
             const categoryText = category === 'ALL' ? '' : ` (${categoryDisplayName})`;
 
+            // 카테고리에 따른 최대 점수 가져오기
+            const maxScore = categoryMaxScores[category] || 152;
+            const rawScoreTextKo = `괄호 안의 회색 숫자는 원점수(${maxScore}점 만점)를 나타냅니다.`;
+            const rawScoreTextEn = `Values in parentheses (gray) indicate raw scores (out of ${maxScore} points).`;
+
             const chartHtml = `
                 <div class="bg-white rounded-lg border border-gray-200 p-4">
                     <div class="mb-4">
@@ -1969,7 +1979,7 @@
                         </p>
                     </div>
                     ` : ''}
-                    <div class="mb-4 flex gap-4 text-sm">
+                    <div class="mb-4 flex gap-4 text-sm flex-wrap">
                         <div class="flex items-center gap-2">
                             <div class="w-4 h-4 rounded bg-green-500"></div>
                             <span data-ko="90점 이상" data-en="90 score and above">90점 이상</span>
@@ -1982,27 +1992,29 @@
                             <div class="w-4 h-4 rounded bg-red-500"></div>
                             <span data-ko="70점 미만" data-en="Below 70 score">70점 미만</span>
                         </div>
-		    <div class="flex items-center gap-2">
-			<div
-			    class="w-4 h-4 rounded border border-gray-500"
-			    style="
-				background-image: repeating-linear-gradient(
-				    45deg,
-				    rgba(107,114,128,0.8) 0,
-				    rgba(107,114,128,0.8) 1px,
-				    transparent 1px,
-				    transparent 4px
-				);
-			    ">
-			</div>
-			<span data-ko="Closed 모델" data-en="Closed-weight model">Closed-weight model</span>
-		    </div>
-			<div class="flex items-center gap-2">
-			    <div
-				class="w-4 h-4 rounded border border-gray-500 bg-white-200">
-			    </div>
-			    <span data-ko="Open 모델" data-en="Open-weighted model">Open-weighted model</span>
-			</div>
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-4 h-4 rounded border border-gray-500"
+                                style="
+                                    background-image: repeating-linear-gradient(
+                                        45deg,
+                                        rgba(107,114,128,0.8) 0,
+                                        rgba(107,114,128,0.8) 1px,
+                                        transparent 1px,
+                                        transparent 4px
+                                    );
+                                ">
+                            </div>
+                            <span data-ko="Closed 모델" data-en="Closed-weight model">Closed-weight model</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-4 h-4 rounded border border-gray-500 bg-white-200">
+                            </div>
+                            <span data-ko="Open 모델" data-en="Open-weighted model">Open-weighted model</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-2" data-ko="${rawScoreTextKo}" data-en="${rawScoreTextEn}">${rawScoreTextEn}</p>
                     </div>
                     <div class="h-[600px]" style="position: relative;">
                         <canvas id="performanceChart"></canvas>
@@ -2154,10 +2166,20 @@
                 return;
             }
 
+            // Download 버튼을 섹션 제목 옆에 배치
+            const downloadBtnContainer = document.getElementById('latencyPerformanceDownloadBtn');
+            if (downloadBtnContainer) {
+                downloadBtnContainer.innerHTML = `
+                    <button onclick="downloadChart('latencyPerformanceChart', 'latency_performance_${language}_${modality}')"
+                            class="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md">
+                        <span class="text-sm font-medium">📥 Download Chart</span>
+                    </button>
+                `;
+            }
+
             const chartHtml = `
                 <div class="bg-white rounded-lg border border-gray-200 p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="flex gap-4 text-sm flex-wrap items-center">
+                    <div class="flex gap-4 text-sm flex-wrap items-center mb-1">
                         <div class="flex items-center gap-2">
                             <div class="w-4 h-4 rounded bg-green-500"></div>
                             <span data-ko="Latency (막대) ≤ 시험시간" data-en="Latency (bar) ≤ Exam Time">Latency (bar) ≤ Exam Time</span>
@@ -2176,13 +2198,9 @@
                             <div class="w-4 h-4 border-2 border-red-500" style="height: 2px; border-style: dashed;"></div>
                             <span data-ko="시험시간 (152분)" data-en="Exam Time (152 minutes)">Exam Time (152 minutes)</span>
                         </div>
-                        </div>
-                        <button onclick="downloadChart('latencyPerformanceChart', 'latency_performance_${language}_${modality}')"
-                                class="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md flex-shrink-0">
-                            <span class="text-sm font-medium">📥 Download Chart</span>
-                        </button>
                     </div>
-                    <div id="latencyPerformanceChartContainer" class="latency-performance-chart-container" style="background: white; padding: 16px;">
+                    <p class="text-xs text-gray-600 mb-1" data-ko="괄호 안의 회색 숫자는 원점수(152점 만점)를 나타냅니다." data-en="Values in parentheses (gray) indicate raw scores (out of 152 points).">Values in parentheses (gray) indicate raw scores (out of 152 points).</p>
+                    <div id="latencyPerformanceChartContainer" class="latency-performance-chart-container" style="background: white; padding-top: 8px; padding-bottom: 16px; padding-left: 16px; padding-right: 16px;">
                         <div class="h-[700px]" style="position: relative;">
                             <canvas id="latencyPerformanceChart"></canvas>
                         </div>
@@ -2271,6 +2289,10 @@
                                         const lines = [];
                                         if (item.score !== null && item.score !== undefined) {
                                             lines.push(`Score: ${item.score.toFixed(1)}${getScoreUnit()}`);
+                                            // 원점수 표시 (있는 경우)
+                                            if (item.rawScore !== null && item.rawScore !== undefined) {
+                                                lines.push(`Raw Score: ${item.rawScore}${currentLanguage === 'ko' ? '점' : ' points'}`);
+                                            }
                                         }
                                         if (item.overBaseline) {
                                             lines.push('Exceeds exam time');
@@ -2347,8 +2369,8 @@
                         padding: {
                             left: 300,
                             right: 60,
-                            top: 60,
-                            bottom: 80 // Exam Time 레이블을 위한 여유 공간 추가
+                            top: 30,
+                            bottom: 30 // Exam Time 레이블을 위한 여유 공간 추가
                         }
                     }
                 },
@@ -2419,6 +2441,16 @@
                             ctx.textBaseline = 'middle';
                             const textX = score > 100 ? maxX + 8 : x1 + 8;
                             ctx.fillText(score.toFixed(1), textX, lineY);
+                            
+                            // 원점수 표시 (있는 경우)
+                            if (item.rawScore !== null && item.rawScore !== undefined) {
+                                ctx.font = '400 9px Inter';
+                                ctx.fillStyle = '#6b7280';
+                                ctx.textBaseline = 'middle';
+                                const rawScoreText = `(${item.rawScore})`;
+                                const rawScoreTextWidth = ctx.measureText(rawScoreText).width;
+                                ctx.fillText(rawScoreText, textX + ctx.measureText(score.toFixed(1)).width + 4, lineY);
+                            }
                             ctx.restore();
                         });
                     }
@@ -2852,7 +2884,7 @@
                             <span class="text-sm font-medium">📥 Download Chart</span>
                         </button>
                     </div>
-                    <div class="mb-4 flex gap-4 text-sm">
+                    <div class="mb-4 flex gap-4 text-sm flex-wrap">
                         <div class="flex items-center gap-2">
                             <div class="w-4 h-4 rounded bg-green-500"></div>
                             <span data-ko="90점 이상" data-en="90 score and above">90점 이상</span>
@@ -2865,7 +2897,29 @@
                             <div class="w-4 h-4 rounded bg-red-500"></div>
                             <span data-ko="70점 미만" data-en="Below 70 score">70점 미만</span>
                         </div>
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-4 h-4 rounded border border-gray-500"
+                                style="
+                                    background-image: repeating-linear-gradient(
+                                        45deg,
+                                        rgba(107,114,128,0.8) 0,
+                                        rgba(107,114,128,0.8) 1px,
+                                        transparent 1px,
+                                        transparent 4px
+                                    );
+                                ">
+                            </div>
+                            <span data-ko="Closed 모델" data-en="Closed-weight model">Closed-weight model</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-4 h-4 rounded border border-gray-500 bg-white-200">
+                            </div>
+                            <span data-ko="Open 모델" data-en="Open-weighted model">Open-weighted model</span>
+                        </div>
                     </div>
+                    <p class="text-xs text-gray-600 mb-2" data-ko="괄호 안의 회색 숫자는 원점수(152점 만점)를 나타냅니다." data-en="Values in parentheses (gray) indicate raw scores (out of 152 points).">Values in parentheses (gray) indicate raw scores (out of 152 points).</p>
                     <div id="bestPerformanceChartContainer" class="best-performance-chart-container" style="background: white; padding: 16px;">
                         <div class="h-[680px]" style="position: relative;">
                             <canvas id="bestPerformanceChart"></canvas>
@@ -2969,7 +3023,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Normalized Score'
+                                text: 'Performance (normalized score)'
                             }
                         },
                         y: {
