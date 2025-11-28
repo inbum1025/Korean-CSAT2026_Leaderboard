@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+/tmp/
+/ngrok.log
+
+# 배포 스크립트 (선택사항)
+start_server.py
+start_with_ngrok.sh
+start_ngrok.sh
+simple_deploy.sh
+get_tunnel_url.sh
+DEPLOY.md

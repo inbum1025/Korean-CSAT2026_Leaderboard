@@ -1,0 +1,3017 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 CSAT Leaderboard - Comprehensive Assessment of Semantic Tasks</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%237c3aed;stop-opacity:1' /><stop offset='50%' style='stop-color:%23a855f7;stop-opacity:1' /><stop offset='100%' style='stop-color:%239333ea;stop-opacity:1' /></linearGradient></defs><rect width='100' height='100' fill='url(%23grad)' rx='20'/><text x='50' y='70' font-size='60' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>C</text></svg>" type="image/svg+xml">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .gradient-header {
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #9333ea 100%);
+        }
+        
+        .gradient-filter {
+            background: linear-gradient(to right, #faf5ff 0%, #f0f9ff 100%);
+        }
+        
+        .chart-container {
+            background: white;
+        }
+        
+        .chart-container canvas {
+            background: white !important;
+        }
+        
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.75rem !important;
+            }
+            
+            .gradient-filter {
+                padding: 1rem !important;
+            }
+            
+            .gradient-filter .grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            #performanceContent,
+            #fullTableContent {
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <!-- Header -->
+    <header class="gradient-header text-white py-8 shadow-lg relative">
+        <div class="container mx-auto px-4">
+            <div class="absolute top-4 right-4">
+                <div class="flex gap-2">
+                    <button id="langKo" onclick="setLanguage('ko')" class="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg font-medium transition-colors">한국어</button>
+                    <button id="langEn" onclick="setLanguage('en')" class="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg font-medium transition-colors">English</button>
+                </div>
+            </div>
+            <h1 class="text-4xl font-bold mb-2" data-ko="2026학년도 한국 대학수학능력시험-수학 LLM 평가 리더보드" data-en="2026 Korean College Scholastic Ability Math-Test LLM Evaluation Leaderboard">2026학년도 한국 대학수학능력시험 LLM 평가 리더보드</h1>
+            <p class="text-xl text-purple-100 mb-1">2026 Korean CSAT Leaderboard</p>
+            <p class="text-sm text-purple-200 mt-2">ISoft Lab, Chungnam National University</p>
+            <p class="text-sm text-purple-200 mt-2">
+                <a href="https://isoft.cnu.ac.kr/" target="_blank" rel="noopener noreferrer" class="text-blue-300 hover:text-blue-200 underline">https://isoft.cnu.ac.kr/</a>
+            </p>
+        </div>
+    </header>
+
+    <!-- Paper Links Section -->
+    <section class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
+                <span class="text-sm md:text-base font-semibold" data-ko="📄 논문:" data-en="📄 Paper:">📄 논문:</span>
+                <a href="#" id="paperLinkEn" target="_blank" rel="noopener noreferrer" 
+                   class="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg font-medium transition-colors text-sm md:text-base border border-white border-opacity-30"
+                   data-ko="English Version" data-en="English Version">
+                    English Version
+                </a>
+                <a href="#" id="paperLinkKo" target="_blank" rel="noopener noreferrer" 
+                   class="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg font-medium transition-colors text-sm md:text-base border border-white border-opacity-30"
+                   data-ko="한국어 버전" data-en="Korean Version">
+                    한국어 버전
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Developer Upload Section (Hidden by default) -->
+    <div id="uploadSection" class="hidden bg-gray-100 border-b border-gray-300 py-3">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-semibold text-gray-700">데이터 파일 업로드 (개발자 모드):</span>
+                <input type="file" id="tsvFileInput" accept=".tsv" class="text-sm border border-gray-300 rounded px-3 py-1">
+                <button onclick="loadTSVFile()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1 rounded text-sm font-medium">
+                    TSV 파일 로드
+                </button>
+                <span id="fileStatus" class="text-sm text-purple-600 font-medium"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 space-y-8">
+        <!-- Experiment Introduction Section -->
+        <section class="bg-white rounded-lg shadow-xl p-6 mb-8">
+            <div class="prose max-w-none">
+                <p class="text-gray-700 leading-relaxed mb-4"
+                   data-ko="저희 팀은 2025학년도 수능 수학 시험지가 공식 공개되는 즉시, 주요 대규모 언어모델(LLMs)에게 동일한 시험지를 풀이하도록 진행하였습니다. 모든 추론 및 응답 생성은 시험지 공개 후 2시간 이내에 완료되었으며, 이로 인해 어떤 모델도 해당 문제를 사전에 학습했을 가능성은 매우 낮다고 판단됩니다."
+                   data-en="Our team immediately conducted evaluations by having major large language models (LLMs) solve the same test papers as soon as the 2025 CSAT mathematics test papers were officially released. All reasoning and response generation were completed within 2 hours after the test papers were released, making it highly unlikely that any model had pre-trained on these problems.">
+                    저희 팀은 2025학년도 수능 수학 시험지가 공식 공개되는 즉시, 주요 대규모 언어모델(LLMs)에게 동일한 시험지를 풀이하도록 진행하였습니다. 모든 추론 및 응답 생성은 시험지 공개 후 2시간 이내에 완료되었으며, 이로 인해 어떤 모델도 해당 문제를 사전에 학습했을 가능성은 매우 낮다고 판단됩니다.
+                </p>
+                <p class="text-gray-700 leading-relaxed"
+                   data-ko="본 리더보드는 이러한 평가 절차를 통해 수집된 결과를 기반으로, 각 모델의 실제 문제 해결 능력과 언어·모달리티 조건에 따른 성능 차이를 체계적으로 평가하였습니다."
+                   data-en="This leaderboard systematically evaluated each model's actual problem-solving capabilities and performance differences according to language and modality conditions, based on the results collected through this evaluation process.">
+                    본 리더보드는 이러한 평가 절차를 통해 수집된 결과를 기반으로, 각 모델의 실제 문제 해결 능력과 언어·모달리티 조건에 따른 성능 차이를 체계적으로 평가하였습니다.
+                </p>
+            </div>
+        </section>
+
+        <!-- Experiment Description Section -->
+        <section class="bg-white rounded-lg shadow-xl p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4" data-ko="실험 구성" data-en="Experiment Configuration">실험 구성</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
+                    <h3 class="font-semibold text-gray-800 mb-3" data-ko="문항 구성" data-en="Question Composition">문항 구성</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li><strong data-ko="총 문항 수:" data-en="Total Questions:">총 문항 수:</strong> <span data-ko="30문항" data-en="30 questions">30문항</span></li>
+                        <li><strong data-ko="공통 과목:" data-en="Common Subject:">공통 과목:</strong> <span data-ko="22문항" data-en="22 questions">22문항</span>
+                            <ul class="ml-4 mt-1 space-y-1">
+                                <li data-ko="수학Ⅰ: 11문항" data-en="Mathematics I: 11 questions">수학Ⅰ: 11문항 (예상)</li>
+                                <li data-ko="수학Ⅱ: 11문항" data-en="Mathematics II: 11 questions">수학Ⅱ: 11문항 (예상)</li>
+                            </ul>
+                        </li>
+                        <li><strong data-ko="선택 과목:" data-en="Selective Subject:">선택 과목:</strong> <span data-ko="8문항" data-en="8 questions">8문항</span>
+                            <ul class="ml-4 mt-1">
+                                <li data-ko="확률과 통계, 미적분, 기하 중 택 1" data-en="One of: Probability & Statistics, Calculus, Geometry">확률과 통계, 미적분, 기하 중 택 1</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-purple-50 border-l-4 border-purple-500 p-4">
+                    <h3 class="font-semibold text-gray-800 mb-3" data-ko="문항 유형" data-en="Question Types">문항 유형</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+                        <div>
+                            <strong class="text-base" data-ko="1. 공통과목 (1–22번)" data-en="1. Common Subject (1–22)">1. 공통과목 (1–22번)</strong>
+                            <ul class="mt-2 space-y-2">
+                                <li>
+                                    <strong data-ko="① 객관식 15문항 (1–15번)" data-en="① Multiple Choice: 15 questions (1–15)">① 객관식 15문항 (1–15번)</strong>
+                                    <ul class="ml-4 mt-1 space-y-1">
+                                        <li data-ko="2점: 2문항" data-en="2 score: 2 questions">2점: 2문항</li>
+                                        <li data-ko="3점: 6문항" data-en="3 score: 6 questions">3점: 6문항</li>
+                                        <li data-ko="4점: 7문항" data-en="4 score: 7 questions">4점: 7문항</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong data-ko="② 단답형 7문항 (16–22번)" data-en="② Short Answer: 7 questions (16–22)">② 단답형 7문항 (16–22번)</strong>
+                                    <ul class="ml-4 mt-1">
+                                        <li data-ko="전부 4점 문항" data-en="All 4 score questions">전부 4점 문항</li>
+                                        <li data-ko="(일부는 연속 4점 문항 블록 구성, 총 8점)" data-en="(Some are consecutive 4-score question blocks, total 8 score)">(일부는 연속 4점 문항 블록 구성, 총 8점)</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong class="text-base" data-ko="2. 선택과목 (23–30번)" data-en="2. Selective Subject (23–30)">2. 선택과목 (23–30번)</strong>
+                            <ul class="mt-2 space-y-2">
+                                <li>
+                                    <strong data-ko="① 객관식 6문항 (23–28번)" data-en="① Multiple Choice: 6 questions (23–28)">① 객관식 6문항 (23–28번)</strong>
+                                    <ul class="ml-4 mt-1 space-y-1">
+                                        <li data-ko="2점: 1문항 (23번)" data-en="2 score: 1 question (23)">2점: 1문항 (23번)</li>
+                                        <li data-ko="3점: 4문항 (24–27번)" data-en="3 score: 4 questions (24–27)">3점: 4문항 (24–27번)</li>
+                                        <li data-ko="4점: 1문항 (28번)" data-en="4 score: 1 question (28)">4점: 1문항 (28번)</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong data-ko="② 단답형 2문항 (29–30번)" data-en="② Short Answer: 2 questions (29–30)">② 단답형 2문항 (29–30번)</strong>
+                                    <ul class="ml-4 mt-1">
+                                        <li data-ko="모두 4점 문항" data-en="All 4 score questions">모두 4점 문항</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Description Section -->
+        <section class="bg-white rounded-lg shadow-xl p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4" data-ko="Performance 설명" data-en="Performance Description">Performance 설명</h2>
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-700 mb-3" data-ko="수학 영역 점수 구성" data-en="Mathematics Section Score Composition">수학 영역 점수 구성</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead class="bg-purple-100">
+                            <tr>
+                                <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700" data-ko="구분" data-en="Category">구분</th>
+                                <th class="border border-gray-300 px-4 py-3 text-center font-semibold text-gray-700" data-ko="점수" data-en="Points">점수</th>
+                                <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700" data-ko="비고" data-en="Note">비고</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-3 font-medium" data-ko="공통과목" data-en="Common Subject">공통과목</td>
+                                <td class="border border-gray-300 px-4 py-3 text-center" data-ko="74점" data-en="74 points">74점</td>
+                                <td class="border border-gray-300 px-4 py-3" data-ko="수학 I, 수학 II" data-en="Mathematics I, Mathematics II">수학 I, 수학 II</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="border border-gray-300 px-4 py-3 font-medium" data-ko="선택과목" data-en="Selective Subject">선택과목</td>
+                                <td class="border border-gray-300 px-4 py-3 text-center" data-ko="26점" data-en="26 points">26점</td>
+                                <td class="border border-gray-300 px-4 py-3" data-ko="확률과 통계, 미적분, 기하 중 1개 선택" data-en="One of: Probability & Statistics, Calculus, Geometry">확률과 통계, 미적분, 기하 중 1개 선택</td>
+                            </tr>
+                            <tr class="bg-purple-50">
+                                <td class="border border-gray-300 px-4 py-3 font-bold" data-ko="합계" data-en="Total">합계</td>
+                                <td class="border border-gray-300 px-4 py-3 text-center font-bold" data-ko="152점" data-en="152 points">152점</td>
+                                <td class="border border-gray-300 px-4 py-3" data-ko="공통과목(74점) + 선택과목(26점) x 3  = 152점" data-en="Common (74) + Selective (26) x 3 = 152">공통과목(74점) + 선택과목(26점) = 152점</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bg-purple-50 border-l-4 border-purple-500 p-4">
+                <p class="text-gray-700 leading-relaxed mb-3">
+                    <strong data-ko="Performance 계산:" data-en="Performance Calculation:">Performance 계산:</strong>
+                    <span data-ko="각 모델이 수능 수학 문제를 풀었을 때, 152점 만점 중 몇 점을 맞췄는지를 표준화하여 100점 만점으로 환산하여 표시합니다."
+                          data-en="Each model's performance is calculated by normalizing the score achieved out of 152 score to a 100-score scale when solving the CSAT mathematics problems.">
+                        각 모델이 수능 수학 문제를 풀었을 때, 152점 만점 중 몇 점을 맞췄는지를 표준화하여 100점 만점으로 환산하여 표시합니다.
+                    </span>
+                </p>
+                <div class="mt-3 p-3 bg-white rounded border border-purple-200">
+                    <p class="text-sm font-mono text-gray-800 text-center">
+                        <span data-ko="Performance (환산 점수) = (실제 점수 / 152) × 100" data-en="Performance (normalized score) = (Actual Points / 152) × 100">Performance = (실제 점수 / 152) × 100</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Baseline Performance Section with Tabs -->
+        <section class="bg-white rounded-lg shadow-xl p-6">
+            <div class="mb-4">
+                <div class="flex border-b border-gray-200 mb-4">
+                    <button id="baselineTab" onclick="switchPerformanceTab('baseline')" 
+                            class="px-6 py-3 font-semibold text-gray-700 border-b-2 border-purple-600 transition-colors">
+                        <span data-ko="Baseline Performance" data-en="Baseline Performance">Baseline Performance</span>
+                    </button>
+                    <button id="bestTab" onclick="switchPerformanceTab('best')" 
+                            class="px-6 py-3 font-semibold text-gray-500 hover:text-gray-700 transition-colors">
+                        <span data-ko="Model Best Performance" data-en="Model Best Performance">Model Best Performance</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Baseline Tab Content -->
+            <div id="baselineTabContent">
+                <div class="mb-4">
+                    <p class="text-gray-600 mb-2">
+                        <span class="font-semibold text-gray-500 underline decoration-gray-400" data-ko="Prompt Language:" data-en="Prompt Language:">Prompt Language:</span>
+                        <span class="text-gray-800 font-medium" data-ko="Korean" data-en="Korean">Korean</span>
+                        <span class="text-gray-400 mx-2">|</span>
+                        <span class="font-semibold text-gray-500 underline decoration-gray-400" data-ko="Input Modality:" data-en="Input Modality:">Input Modality:</span>
+                        <span class="text-gray-800 font-medium" data-ko="Text" data-en="Text">Text</span>
+                    </p>
+                    <p class="text-sm text-gray-500 italic" data-ko="모델의 프롬프트 언어(Korean) 및 입력 모달리티(Text)에 따른 성능을 보여줍니다."
+                       data-en="Shows model performance when tested with Korean prompt language and Text input modality.">
+                        모델의 프롬프트 언어(Korean) 및 입력 모달리티(Text)에 따른 성능을 보여줍니다.
+                    </p>
+                </div>
+                <div id="baselineContent">
+                    <div class="text-center py-12 text-gray-500" data-ko="데이터를 로드하는 중..." data-en="Loading data...">데이터를 로드하는 중...</div>
+                </div>
+            </div>
+            
+            <!-- Best Performance Tab Content -->
+            <div id="bestTabContent" style="display: none;">
+                <p class="text-gray-600 mb-4 text-sm" 
+                   data-ko="각 모델의 입력 모달리티 및 언어별 최고 성능을 비교합니다." 
+                   data-en="Compare the best performance of each model across different input modalities and languages.">
+                    각 모델의 입력 모달리티 및 언어별 최고 성능을 비교합니다.
+                </p>
+                <div id="bestPerformanceContent">
+                    <div class="text-center py-12 text-gray-500" data-ko="데이터를 로드하는 중..." data-en="Loading data...">데이터를 로드하는 중...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Model Performance Chart Section -->
+        <section class="bg-white rounded-lg shadow-xl p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Model Performance Chart</h2>
+
+            <!-- Filter Panel -->
+            <div class="gradient-filter rounded-lg p-5 border border-purple-200 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                            <span data-ko="Prompt Language" data-en="Prompt Language">Prompt Language</span>
+                            <span class="relative group">
+                                <svg class="w-4 h-4 text-gray-400 cursor-help" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                                </svg>
+                                <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10" data-ko="프롬프트에 사용된 언어를 선택합니다" data-en="Select the language used in the prompt">프롬프트에 사용된 언어를 선택합니다</span>
+                            </span>
+                        </label>
+                        <select id="languageFilter" class="w-full appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all cursor-pointer">
+                            <option value="Korean" selected>Korean</option>
+                            <option value="English">English</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                            <span data-ko="Input Modality" data-en="Input Modality">Input Modality</span>
+                            <span class="relative group">
+                                <svg class="w-4 h-4 text-gray-400 cursor-help" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                                </svg>
+                                <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10" data-ko="입력 데이터의 형태를 선택합니다 (텍스트, 이미지, 텍스트+이미지)" data-en="Select the input data format (Text, Image, Text+Image)">입력 데이터의 형태를 선택합니다 (텍스트, 이미지, 텍스트+이미지)</span>
+                            </span>
+                        </label>
+                        <select id="modalityFilter" class="w-full appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all cursor-pointer">
+                            <option value="Text">Text-only</option>
+                            <option value="Image">Image-only</option>
+                            <option value="Text+Image">Text+Figure</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                            <span data-ko="Problem Category" data-en="Problem Category">Problem Category</span>
+                            <span class="relative group">
+                                <svg class="w-4 h-4 text-gray-400 cursor-help" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                                </svg>
+                                <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10" data-ko="문제 카테고리를 선택합니다" data-en="Select the problem category">문제 카테고리를 선택합니다</span>
+                            </span>
+                        </label>
+                        <select id="categoryFilter" class="w-full appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all cursor-pointer" onchange="updateCategoryInfo()">
+                            <option value="ALL" selected data-ko="전체 (30문항, 152점)" data-en="ALL (30 questions, 152 points)">ALL (30 questions, 152 points)</option>
+                            <option value="기하" data-ko="기하 (8문항, 26점)" data-en="Geometry (8 questions, 26 points)">Geometry (8 questions, 26 points)</option>
+                            <option value="미적분" data-ko="미적분 (8문항, 26점)" data-en="Calculus (8 questions, 26 points)">Calculus (8 questions, 26 points)</option>
+                            <option value="확률과통계" data-ko="확률과통계 (8문항, 26점)" data-en="Probability & Statistics (8 questions, 26 points)">Probability & Statistics (8 questions, 26 points)</option>
+                            <option value="공통과목" data-ko="공통과목 (22문항, 74점)" data-en="Common Subject (22 questions, 74 points)">Common Subject (22 questions, 74 points)</option>
+                        </select>
+                        <div id="categoryInfo" class="mt-2 text-xs text-gray-600" data-ko="30문항, 152점" data-en="30 questions, 152 points">30 questions, 152 points</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Download Chart Button (Top) -->
+            <div class="mb-4 flex justify-end">
+                <button id="downloadPerformanceChartBtn" onclick="downloadChart('performanceChart', 'performance')"
+                        class="flex items-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md" style="display: none;">
+                    <span class="text-sm font-medium">📥 Download Chart</span>
+                </button>
+            </div>
+
+            <!-- Performance Chart and Table in 2 columns -->
+            <div class="flex flex-col lg:flex-row gap-6">
+                <!-- Performance Table (Left) - 35% -->
+                <div class="lg:w-[35%]">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4" data-ko="Model Performance Table" data-en="Model Performance Table">Model Performance Table</h3>
+                    <div id="fullTableContent">
+                        <div class="text-center py-12 text-gray-500" data-ko="데이터를 로드하는 중..." data-en="Loading data...">데이터를 로드하는 중...</div>
+                    </div>
+                </div>
+
+                <!-- Performance Chart (Right) - 65% -->
+                <div id="performanceContent" class="lg:w-[65%]">
+                    <div class="text-center py-12 text-gray-500" data-ko="데이터를 로드하는 중..." data-en="Loading data...">데이터를 로드하는 중...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latency & Performance Chart Section -->
+        <section class="bg-white rounded-lg shadow-xl p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6" data-ko="Latency & Performance" data-en="Latency & Performance">Latency & Performance</h2>
+            <p class="text-gray-600 mb-4 text-sm" 
+               data-ko="각 모델의 응답 시간(Latency)과 성능(Performance)을 비교합니다. 아래 막대는 응답 시간(분), 위 선은 정규화된 점수를 나타냅니다." 
+               data-en="Compare response time (Latency) and performance for each model. The bottom bars show response time (minutes), and the top lines show normalized scores.">
+                각 모델의 응답 시간(Latency)과 성능(Performance)을 비교합니다. 아래 막대는 응답 시간(분), 위 선은 정규화된 점수를 나타냅니다.
+            </p>
+            <div id="latencyPerformanceContent">
+                <div class="text-center py-12 text-gray-500" data-ko="데이터를 로드하는 중..." data-en="Loading data...">데이터를 로드하는 중...</div>
+            </div>
+        </section>
+
+        <!-- GPT-5 Reasoning Analysis Section -->
+        <section class="bg-white rounded-lg shadow-xl p-6" style="display: none !important; visibility: hidden !important;">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">GPT-5 Reasoning Analysis</h2>
+            <div id="reasoningContent">
+                <div class="text-center py-12 text-gray-500" data-ko="데이터를 로드하는 중..." data-en="Loading data...">데이터를 로드하는 중...</div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="bg-white rounded-lg shadow-xl p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6" data-ko="자주 묻는 질문 (FAQ)" data-en="Frequently Asked Questions (FAQ)">자주 묻는 질문 (FAQ)</h2>
+            
+            <div class="space-y-6">
+                <div class="bg-purple-50 border-l-4 border-purple-500 p-5 rounded-r-lg">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3" data-ko="Q: 입력이 텍스트만 가능한 모델들은 어떻게 평가했나요?" data-en="Q: How were models that only support text input evaluated?">Q: 입력이 텍스트만 가능한 모델들은 어떻게 평가했나요?</h3>
+                    <p class="text-gray-700 leading-relaxed" 
+                       data-ko="A: 텍스트만 입력이 가능한 모델들은 image, text+figure에서 실험을 하지 않았다. 따라서 text가 입력모달리티로 들어가는건 총 24개의 모델, 나머지는 14개의 모델로 실험을 수행하였다." 
+                       data-en="A: Models that only support text input were not tested with image or text+figure modalities. Therefore, experiments were conducted with 24 models for text input modality, and 14 models for other modalities.">
+                        A: 텍스트만 입력이 가능한 모델들은 image, text+figure에서 실험을 하지 않았다. 따라서 text가 입력모달리티로 들어가는건 총 24개의 모델, 나머지는 14개의 모델로 실험을 수행하였다.
+                    </p>
+                </div>
+                
+                <div class="bg-purple-50 border-l-4 border-purple-500 p-5 rounded-r-lg">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3" data-ko="Q: 모델의 입출력 형태는 어떻게되나요?" data-en="Q: What is the input and output format of the models?">Q: 모델의 입출력 형태는 어떻게되나요?</h3>
+                    <p class="text-gray-700 leading-relaxed" 
+                       data-ko="A: 모델의 입력의 경우 수능 수학문제를 Markdown과 Latex으로 표기하여 일관성있게 입력해주었다. 출력형식 역시 모든 모델동일하게 출력하였으며, 일부 모델은 문제풀이 능력과 별개로 출력형식을 고려하지않아 성능이 저하되는 경우도 있었다. 자세한 내용은 본 사이트의 상단에 위치한 논문에 작성되어있다." 
+                       data-en="A: For model inputs, CSAT math problems were consistently formatted using Markdown and LaTeX notation. The output format was also standardized across all models. However, some models showed performance degradation due to not properly considering the output format, independent of their problem-solving capabilities. For more details, please refer to the paper located at the top of this site.">
+                        A: 모델의 입력의 경우 수능 수학문제를 Markdown과 Latex으로 표기하여 일관성있게 입력해주었다. 출력형식 역시 모든 모델동일하게 출력하였으며, 일부 모델은 문제풀이 능력과 별개로 출력형식을 고려하지않아 성능이 저하되는 경우도 있었다. 자세한 내용은 본 사이트의 상단에 위치한 논문에 작성되어있다.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-6 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2025 ISoft Lab, Chungnam National University. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let rawData = null;
+        let parsedData = null;
+        let categoryData = null; // 문제 카테고리별 데이터
+        let baselineChart = null;
+        let performanceChart = null;
+        let reasoningChart = null;
+        let bestPerformanceChart = null; // 모델별 best 성능 차트
+        let latencyPerformanceChart = null; // Latency & Performance 차트
+        let latencyData = null; // Latency 데이터
+        let currentLanguage = 'en'; // 기본 언어는 영어
+        const BASELINE_TIME = 152; // 시험 시간 (분)
+
+        // 개발자 모드: URL에 ?dev=true 추가하면 업로드 섹션 표시
+        if (window.location.search.includes('dev=true')) {
+            document.getElementById('uploadSection').classList.remove('hidden');
+        }
+
+        // 언어 전환 함수
+        function setLanguage(lang) {
+            currentLanguage = lang;
+
+            // 버튼 스타일 업데이트
+            if (lang === 'ko') {
+                document.getElementById('langKo').classList.add('bg-white', 'bg-opacity-30');
+                document.getElementById('langKo').classList.remove('bg-opacity-20');
+                document.getElementById('langEn').classList.remove('bg-opacity-30');
+                document.getElementById('langEn').classList.add('bg-opacity-20');
+            } else {
+                document.getElementById('langEn').classList.add('bg-white', 'bg-opacity-30');
+                document.getElementById('langEn').classList.remove('bg-opacity-20');
+                document.getElementById('langKo').classList.remove('bg-opacity-30');
+                document.getElementById('langKo').classList.add('bg-opacity-20');
+            }
+
+            // 모든 data-ko, data-en 속성을 가진 요소 업데이트
+            document.querySelectorAll('[data-ko][data-en]').forEach(element => {
+                const text = element.getAttribute(`data-${lang}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+            
+            // 카테고리 정보 업데이트
+            updateCategoryInfo();
+        }
+
+        // 점수 단위 반환 함수
+        function getScoreUnit() {
+            return currentLanguage === 'ko' ? '점' : ' score';
+        }
+
+        // 카테고리 정보 업데이트
+        function updateCategoryInfo() {
+            const category = document.getElementById('categoryFilter')?.value || 'ALL';
+            const infoDiv = document.getElementById('categoryInfo');
+            if (!infoDiv) return;
+
+            const categoryInfo = {
+                'ALL': { ko: '30문항, 152점', en: '30 questions, 152 points' },
+                '기하': { ko: '8문항, 26점', en: '8 questions, 26 points' },
+                '미적분': { ko: '8문항, 26점', en: '8 questions, 26 points' },
+                '확률과통계': { ko: '8문항, 26점', en: '8 questions, 26 points' },
+                '공통과목': { ko: '22문항, 74점', en: '22 questions, 74 points' }
+            };
+
+            const info = categoryInfo[category] || categoryInfo['ALL'];
+            infoDiv.setAttribute('data-ko', info.ko);
+            infoDiv.setAttribute('data-en', info.en);
+            infoDiv.textContent = currentLanguage === 'ko' ? info.ko : info.en;
+        }
+
+        // 탭 전환 함수
+        function switchPerformanceTab(tab) {
+            const baselineTab = document.getElementById('baselineTab');
+            const bestTab = document.getElementById('bestTab');
+            const baselineContent = document.getElementById('baselineTabContent');
+            const bestContent = document.getElementById('bestTabContent');
+
+            if (tab === 'baseline') {
+                baselineTab.classList.add('border-b-2', 'border-purple-600', 'text-gray-700');
+                baselineTab.classList.remove('text-gray-500');
+                bestTab.classList.remove('border-b-2', 'border-purple-600', 'text-gray-700');
+                bestTab.classList.add('text-gray-500');
+                baselineContent.style.display = 'block';
+                bestContent.style.display = 'none';
+            } else {
+                bestTab.classList.add('border-b-2', 'border-purple-600', 'text-gray-700');
+                bestTab.classList.remove('text-gray-500');
+                baselineTab.classList.remove('border-b-2', 'border-purple-600', 'text-gray-700');
+                baselineTab.classList.add('text-gray-500');
+                baselineContent.style.display = 'none';
+                bestContent.style.display = 'block';
+            }
+        }
+
+
+        // 모델 이름 매핑
+        const modelNameMap = {
+            'GPT-5 Codex': 'GPT-5 Codex',
+            'GPT-5': 'GPT-5',
+            'GPT-5-mini': 'GPT-5-mini',
+            'GPT-5-nano': 'GPT-5-nano',
+            'gpt-oss-20B': 'GPT-OSS-20B',
+            'Grok 4': 'Grok 4',
+            'Grok 4 Fast': 'Grok 4 Fast',
+            'Qwen3 235B A22B': 'Qwen3 235B A22B',
+            'Claude 4.5 Sonnet': 'Claude 4.5 Sonnet',
+            'Claude 4.5 Haiku': 'Claude 4.5 Haiku',
+            'Claude 4.1 Opus': 'Claude 4.1 Opus',
+            'Gemini 2.5 Pro': 'Gemini 2.5 Pro',
+            'Gemini 2.5 Flash': 'Gemini 2.5 Flash',
+            'Deepseek R1 0528': 'Deepseek R1 0528',
+            'Deepseek V3.2 Exp': 'Deepseek V3.2 Exp',
+            'GLM 4.6': 'GLM 4.6',
+            'Magistral Medium 2506': 'Magistral Medium 2506',
+            'Magistral Medium 2506 (thinking)': 'Magistral Medium 2506 (thinking)',
+            'MiniMax M2': 'MiniMax M2',
+            'Llama 4 Maverick': 'Llama 4 Maverick',
+            'Llama 3.3 Nemotron Super 49B V1.5': 'Llama 3.3 Nemotron Super 49B V1.5',
+            'Kimi K2 0905': 'Kimi K2 0905',
+            'Kimi K2 Thinking': 'Kimi K2 Thinking'
+        };
+
+        // 모델 아이콘 매핑 (제조사별 매핑, SVG 우선 사용)
+        const modelIconMap = {
+            // OpenAI 계열
+            'GPT-5 Codex': 'model_icon/openai.svg',
+            'GPT-5': 'model_icon/openai.svg',
+            'GPT-5-mini': 'model_icon/openai.svg',
+            'GPT-5-nano': 'model_icon/openai.svg',
+            'gpt-oss-20B': 'model_icon/openai.svg',
+            // X.AI 계열
+            'Grok 4': 'model_icon/xai.svg',
+            'Grok 4 Fast': 'model_icon/xai.svg',
+            // Qwen 계열
+            'Qwen3 235B A22B': 'model_icon/qwen.svg',
+            'Qwen3 235B A22B Thinking 2507': 'model_icon/qwen.svg',
+            // Anthropic (Claude) 계열 - antropic.svg 우선 사용
+            'Claude 4.5 Sonnet': 'model_icon/antropic.svg',
+            'Claude 4.5 Haiku': 'model_icon/antropic.svg',
+            'Claude 4.1 Opus': 'model_icon/antropic.svg',
+            // Google 계열 - google.svg 사용
+            'Gemini 2.5 Pro': 'model_icon/google.svg',
+            'Gemini 2.5 Flash': 'model_icon/google.svg',
+            // Deepseek 계열
+            'Deepseek R1 0528': 'model_icon/deepseek.svg',
+            'Deepseek V3.2 Exp': 'model_icon/deepseek.svg',
+            // ZAI (GLM) 계열
+            'GLM 4.6': 'model_icon/zai.svg',
+            // Mistral 계열 - PNG만 있음
+            'Magistral Medium 2506': 'model_icon/mistral.png',
+            'Magistral Medium 2506 (thinking)': 'model_icon/mistral.png',
+            // MiniMax 계열
+            'MiniMax M2': 'model_icon/minimax.svg',
+            // Meta (Llama) 계열
+            'Llama 4 Maverick': 'model_icon/meta.svg',
+            // NVIDIA 계열
+            'Llama 3.3 Nemotron Super 49B V1.5': 'model_icon/nvidia.svg',
+            // Moonshot (Kimi) 계열
+            'Kimi K2 0905': 'model_icon/moonshot.svg',
+            'Kimi K2 Thinking': 'model_icon/moonshot.svg'
+        };
+
+        // Open-Weight Models와 Closed-Weight Models 분류
+        const openWeightModels = [
+            'gpt-oss-20B',
+            'Qwen3 235B A22B',
+            'Qwen3 235B A22B Thinking 2507',
+            'Deepseek R1 0528',
+            'Deepseek V3.2 Exp',
+            'GLM 4.6',
+            'Magistral Medium 2506',
+            'Magistral Medium 2506 (thinking)',
+            'Llama 4 Maverick',
+            'Llama 3.3 Nemotron Super 49B V1.5'
+        ];
+
+        const closedWeightModels = [
+            'GPT-5 Codex',
+            'GPT-5',
+            'GPT-5-mini',
+            'GPT-5-nano',
+            'Grok 4',
+            'Grok 4 Fast',
+            'Claude 4.5 Sonnet',
+            'Claude 4.5 Haiku',
+            'Claude 4.1 Opus',
+            'Gemini 2.5 Pro',
+            'Gemini 2.5 Flash',
+            'MiniMax M2',
+            'Kimi K2 0905',
+            'Kimi K2 Thinking'
+        ];
+
+	const closedWeightModelSet = new Set(closedWeightModels);
+
+        // 아이콘 이미지 캐시
+        const iconImageCache = {};
+
+        // ISoft 로고 이미지 캐시
+        let isoftLogoImage = null;
+
+        // ISoft 로고 이미지 미리 로드
+        function preloadIsoftLogo() {
+            if (!isoftLogoImage) {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => {
+                    isoftLogoImage = img;
+                };
+                img.onerror = () => {
+                    console.warn('Failed to load ISoft logo');
+                };
+                img.src = 'isoft_logo.png';
+            }
+        }
+
+        // 아이콘 이미지 미리 로드
+        function preloadIcons() {
+            const uniqueIcons = new Set(Object.values(modelIconMap).filter(Boolean));
+            uniqueIcons.forEach(iconPath => {
+                if (!iconImageCache[iconPath]) {
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    img.onload = () => {
+                        iconImageCache[iconPath] = img;
+                    };
+                    img.onerror = () => {
+                        // 로드 실패 시 무시
+                    };
+                    img.src = iconPath;
+                }
+            });
+        }
+
+        // 초기 아이콘 및 로고 로드
+        if (typeof window !== 'undefined') {
+            window.addEventListener('load', () => {
+                preloadIcons();
+                preloadIsoftLogo();
+            });
+        }
+
+        // TSV 파일 파싱
+        function parseTSV(tsvText) {
+            const lines = tsvText.split('\n').filter(line => line.trim());
+            if (lines.length < 4) {
+                throw new Error('Invalid TSV format');
+            }
+
+            const timeLimit = lines[0].split('\t').slice(1);
+            const language = lines[1].split('\t').slice(1);
+            const modality = lines[2].split('\t').slice(1);
+
+            const columnMap = [];
+            for (let i = 0; i < timeLimit.length; i++) {
+                // Time limit이 X인 것만 사용 (Cognitive Load 없음)
+                if (timeLimit[i] === 'X') {
+                    columnMap.push({
+                        language: language[i],
+                        modality: modality[i],
+                        index: i
+                    });
+                }
+            }
+
+            const models = [];
+            const reasoningRows = [];
+
+            for (let i = 4; i < lines.length; i++) {
+                const parts = lines[i].split('\t');
+                const modelName = parts[0].trim();
+
+                if (!modelName) continue;
+
+                if (modelName.includes('GPT-5 reasoning effort')) {
+                    // Time limit이 X인 것만 사용 (처음 6개 컬럼)
+                    const timeLimit = lines[0].split('\t').slice(1);
+                    const language = lines[1].split('\t').slice(1);
+                    const modality = lines[2].split('\t').slice(1);
+
+                    const reasoningData = [];
+                    for (let i = 0; i < timeLimit.length; i++) {
+                        if (timeLimit[i] === 'X') {
+                            const cleaned = parts[i + 1] ? parts[i + 1].trim().replace('%', '') : '';
+                            reasoningData.push({
+                                language: language[i],
+                                modality: modality[i],
+                                value: cleaned === '' ? null : parseFloat(cleaned)
+                            });
+                        }
+                    }
+
+                    reasoningRows.push({
+                        name: modelName,
+                        data: reasoningData
+                    });
+                } else {
+                    const scores = parts.slice(1).map((val, idx) => {
+                        const cleaned = val.trim().replace('%', '');
+                        if (cleaned === '' || cleaned === 'X') return null;
+                        return {
+                            value: parseFloat(cleaned),
+                            column: columnMap[idx]
+                        };
+                    });
+
+                    // 모든 점수가 null인 모델은 제외 (성능 데이터가 전혀 없는 모델)
+                    const hasAnyScore = scores.some(score => score !== null);
+                    if (hasAnyScore) {
+                        models.push({
+                            name: modelName,
+                            scores: scores
+                        });
+                    }
+                }
+            }
+
+            return { models, columnMap, reasoningRows };
+        }
+
+        // Latency TSV 파일 파싱
+        function parseLatencyTSV(tsvText) {
+            const lines = tsvText.split('\n').filter(line => line.trim());
+            if (lines.length < 4) {
+                throw new Error('Invalid Latency TSV format');
+            }
+
+            const timeLimit = lines[0].split('\t').slice(1);
+            const language = lines[1].split('\t').slice(1);
+            const modality = lines[2].split('\t').slice(1);
+
+            const columnMap = [];
+            for (let i = 0; i < timeLimit.length; i++) {
+                // Time limit이 X인 것만 사용 (Cognitive Load 없음)
+                if (timeLimit[i] === 'X') {
+                    columnMap.push({
+                        language: language[i],
+                        modality: modality[i],
+                        index: i
+                    });
+                }
+            }
+
+            const latencyMap = {}; // {modelName: {columnIndex: latency}}
+
+            for (let i = 4; i < lines.length; i++) {
+                const parts = lines[i].split('\t');
+                const modelName = parts[0].trim();
+                
+                if (!modelName || modelName.includes('reasoning')) continue;
+
+                const latencies = parts.slice(1).map((val, idx) => {
+                    const cleaned = val.trim();
+                    if (cleaned === '' || cleaned === 'X') return null;
+                    return {
+                        value: parseFloat(cleaned) / 60.0, // 초를 분으로 변환
+                        column: columnMap[idx]
+                    };
+                });
+
+                if (!latencyMap[modelName]) {
+                    latencyMap[modelName] = {};
+                }
+
+                latencies.forEach((latency, idx) => {
+                    if (latency && latency.column) {
+                        const key = `${latency.column.language}_${latency.column.modality}`;
+                        latencyMap[modelName][key] = latency.value;
+                    }
+                });
+            }
+
+            return latencyMap;
+        }
+
+        // 문제 카테고리별 TSV 파일 파싱
+        function parseCategoryTSV(tsvText) {
+            const lines = tsvText.split('\n').filter(line => line.trim());
+            if (lines.length < 2) {
+                throw new Error('Invalid category TSV format');
+            }
+
+            const headers = lines[0].split('\t');
+            const modelIndex = headers.indexOf('model_id');
+            const timeLimitIndex = headers.indexOf('time_limit');
+            const languageIndex = headers.indexOf('language');
+            const contentModeIndex = headers.indexOf('content_mode');
+            const groupValueIndex = headers.indexOf('group_value');
+            const scoreIndex = headers.indexOf('score');
+
+            const categoryMap = {}; // {modelName: {language: {modality: {category: score}}}}
+
+            for (let i = 1; i < lines.length; i++) {
+                const parts = lines[i].split('\t');
+                if (parts.length < Math.max(modelIndex, timeLimitIndex, languageIndex, contentModeIndex, groupValueIndex, scoreIndex) + 1) {
+                    continue;
+                }
+
+                const timeLimit = parts[timeLimitIndex]?.trim();
+                if (timeLimit !== 'off') continue; // time_limit이 'off'인 것만 사용
+
+                const modelId = parts[modelIndex]?.trim();
+                if (!modelId) continue;
+
+                // model_id에서 모델 이름 추출 (예: "openai/gpt-5-codex" -> "GPT-5 Codex")
+                const modelName = extractModelName(modelId);
+                if (!modelName) {
+                    if (i < 10) console.warn('모델 이름 추출 실패:', modelId);
+                    continue;
+                }
+
+                const language = parts[languageIndex]?.trim();
+                const contentMode = parts[contentModeIndex]?.trim();
+                const groupValue = parts[groupValueIndex]?.trim();
+                const scoreStr = parts[scoreIndex]?.trim();
+
+                if (!language || !contentMode || !groupValue || !scoreStr) continue;
+
+                // language 변환 (en -> English, ko -> Korean)
+                const lang = language === 'en' ? 'English' : language === 'ko' ? 'Korean' : language;
+                
+                // content_mode 변환 (text_only -> Text, image_only -> Image, text_fig -> Text+Image)
+                const modality = contentMode === 'text_only' ? 'Text' : 
+                                contentMode === 'image_only' ? 'Image' : 
+                                contentMode === 'text_fig' ? 'Text+Image' : contentMode;
+
+                const score = parseFloat(scoreStr);
+                if (isNaN(score)) continue;
+
+                if (!categoryMap[modelName]) {
+                    categoryMap[modelName] = {};
+                }
+                if (!categoryMap[modelName][lang]) {
+                    categoryMap[modelName][lang] = {};
+                }
+                if (!categoryMap[modelName][lang][modality]) {
+                    categoryMap[modelName][lang][modality] = {};
+                }
+
+                categoryMap[modelName][lang][modality][groupValue] = score;
+            }
+
+            console.log('parseCategoryTSV 완료:', Object.keys(categoryMap).length, 'models');
+            if (Object.keys(categoryMap).length > 0) {
+                const firstModel = Object.keys(categoryMap)[0];
+                console.log('첫 번째 모델 샘플:', firstModel, categoryMap[firstModel]);
+            }
+
+            return categoryMap;
+        }
+
+        // model_id에서 모델 이름 추출
+        function extractModelName(modelId) {
+            if (!modelId) return null;
+            
+            // model_id를 모델 이름으로 매핑 (실제 데이터 형식에 맞춤)
+            const modelIdMap = {
+                'openai/gpt-5-codex': 'GPT-5 Codex',
+                'openai/gpt-5': 'GPT-5',
+                'openai/gpt-5-mini': 'GPT-5-mini',
+                'openai/gpt-5-nano': 'GPT-5-nano',
+                'openai/gpt-oss-20b': 'gpt-oss-20B',
+                'x-ai/grok-4': 'Grok 4',
+                'x-ai/grok-4-fast': 'Grok 4 Fast',
+                'xai/grok-4': 'Grok 4', // 호환성
+                'xai/grok-4-fast': 'Grok 4 Fast', // 호환성
+                'qwen/qwen3-vl-235b-a22b-instruct': 'Qwen3 235B A22B',
+                'qwen/qwen3-235b-a22b': 'Qwen3 235B A22B', // 호환성
+                'qwen/qwen3-vl-235b-a22b-thinking': 'Qwen3 235B A22B Thinking 2507',
+                'anthropic/claude-sonnet-4.5': 'Claude 4.5 Sonnet',
+                'anthropic/claude-4.5-sonnet': 'Claude 4.5 Sonnet', // 호환성
+                'anthropic/claude-haiku-4.5': 'Claude 4.5 Haiku',
+                'anthropic/claude-4.5-haiku': 'Claude 4.5 Haiku', // 호환성
+                'anthropic/claude-opus-4.1': 'Claude 4.1 Opus',
+                'anthropic/claude-4.1-opus': 'Claude 4.1 Opus', // 호환성
+                'google/gemini-2.5-pro': 'Gemini 2.5 Pro',
+                'google/gemini-2.5-flash': 'Gemini 2.5 Flash',
+                'deepseek/deepseek-r1-0528': 'Deepseek R1 0528',
+                'deepseek/deepseek-v3.2-exp': 'Deepseek V3.2 Exp',
+                'z-ai/glm-4.6': 'GLM 4.6',
+                'zai/glm-4.6': 'GLM 4.6', // 호환성
+                'mistralai/magistral-medium-2506': 'Magistral Medium 2506',
+                'mistral/magistral-medium-2506': 'Magistral Medium 2506', // 호환성
+                'mistralai/magistral-medium-2506:thinking': 'Magistral Medium 2506 (thinking)',
+                'minimax/minimax-m2': 'MiniMax M2',
+                'meta-llama/llama-4-maverick': 'Llama 4 Maverick',
+                'meta/llama-4-maverick': 'Llama 4 Maverick', // 호환성
+                'nvidia/llama-3.3-nemotron-super-49b-v1.5': 'Llama 3.3 Nemotron Super 49B V1.5',
+                'moonshotai/kimi-k2-0905': 'Kimi K2 0905',
+                'moonshot/kimi-k2-0905': 'Kimi K2 0905', // 호환성
+                'moonshotai/kimi-k2-thinking': 'Kimi K2 Thinking',
+                'moonshot/kimi-k2-thinking': 'Kimi K2 Thinking' // 호환성
+            };
+
+            // 정확한 매칭 시도
+            if (modelIdMap[modelId]) {
+                return modelIdMap[modelId];
+            }
+
+            // 부분 매칭 시도 (reasoning effort 등이 포함된 경우)
+            const normalizedId = modelId.toLowerCase();
+            for (const [id, name] of Object.entries(modelIdMap)) {
+                const normalizedMapId = id.toLowerCase();
+                // 정확히 일치하거나, modelId가 mapId로 시작하는 경우
+                if (normalizedId === normalizedMapId || normalizedId.startsWith(normalizedMapId + '/') || normalizedId.startsWith(normalizedMapId + '_')) {
+                    return name;
+                }
+            }
+            
+            // 추가 패턴 매칭: anthropic/claude-opus-4.1 같은 형식
+            const claudeMatch = normalizedId.match(/anthropic\/claude-(sonnet|haiku|opus)-(\d+\.\d+)/);
+            if (claudeMatch) {
+                const variant = claudeMatch[1];
+                const version = claudeMatch[2];
+                const variantName = variant === 'sonnet' ? 'Sonnet' : variant === 'haiku' ? 'Haiku' : 'Opus';
+                return `Claude ${version} ${variantName}`;
+            }
+
+            // 매핑되지 않은 경우 원본에서 추출 시도
+            const parts = modelId.split('/');
+            if (parts.length > 1) {
+                const modelPart = parts[1].split('-').slice(0, 3).join('-'); // 처음 3개 부분만 사용
+                return modelPart.split('-').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+            }
+            return modelId;
+        }
+
+        // 필터에 맞는 컬럼 인덱스 찾기
+        function findColumnIndex(columnMap, language, modality) {
+            if (!columnMap || columnMap.length === 0) {
+                console.warn('columnMap이 비어있습니다.');
+                return -1;
+            }
+            
+            const index = columnMap.findIndex(col =>
+                col.language === language &&
+                col.modality === modality
+            );
+            
+            if (index === -1) {
+                console.warn('컬럼을 찾을 수 없습니다:', { language, modality, availableColumns: columnMap.map(c => ({ lang: c.language, mod: c.modality })).slice(0, 5) });
+            }
+            
+            return index;
+        }
+
+        // 문제 카테고리별 만점
+        const categoryMaxScores = {
+            '기하': 26,
+            '미적분': 26,
+            '확률과통계': 26,
+            '수학1': 36,
+            '수학2': 38,
+            '공통과목': 74, // 수학1 + 수학2
+            'ALL': 152
+        };
+
+        // 필터된 데이터 가져오기
+        function getFilteredData(language, modality, category = 'ALL') {
+            const categoryFilter = document.getElementById('categoryFilter')?.value || 'ALL';
+            const actualCategory = category || categoryFilter;
+
+            console.log('getFilteredData 호출:', { language, modality, category: actualCategory, hasParsedData: !!parsedData, hasCategoryData: !!categoryData });
+
+            // 문제 카테고리 필터가 적용된 경우
+            if (actualCategory !== 'ALL' && categoryData) {
+                const result = getCategoryFilteredData(language, modality, actualCategory);
+                console.log('카테고리 필터 결과:', result?.length, 'models');
+                return result;
+            }
+
+            // 기존 로직 (ALL인 경우)
+            if (!parsedData) {
+                console.warn('parsedData가 없습니다.');
+                return null;
+            }
+
+            const columnIndex = findColumnIndex(parsedData.columnMap, language, modality);
+            console.log('컬럼 인덱스:', columnIndex, 'for', language, modality);
+            if (columnIndex === -1) {
+                console.warn('컬럼을 찾을 수 없습니다:', language, modality);
+                return null;
+            }
+
+            // 이미지 미지원이 아닌 경우 null 점수 제외
+            const isImageModality = modality === 'Image' || modality === 'Text+Image';
+
+            const filtered = parsedData.models
+                .map(model => {
+                    const score = model.scores[columnIndex];
+                    const normalizedScore = score ? score.value : null;
+                    // 정규화 점수에서 원점수 역산 (정확한 계산 후 정수로 반올림)
+                    const rawScore = normalizedScore ? Math.round((normalizedScore / 100) * 152) : null;
+                    return {
+                        name: model.name,
+                        score: normalizedScore,
+                        rawScore: rawScore,
+                        displayName: modelNameMap[model.name] || model.name
+                    };
+                })
+                .filter(model => {
+                    // 모델 이름이 있어야 함
+                    if (!model.name || model.name.trim() === '') return false;
+                    // 이미지 모달리티가 아닌 경우, null 점수는 제외 (데이터가 없는 모델)
+                    if (!isImageModality && model.score === null) return false;
+                    return true;
+                })
+                .sort((a, b) => {
+                    if (a.score === null && b.score === null) return 0;
+                    if (a.score === null) return 1;
+                    if (b.score === null) return -1;
+                    return b.score - a.score;
+                })
+                .map((item, index) => ({
+                    ...item,
+                    rank: index + 1
+                }));
+
+            console.log('필터된 데이터:', filtered.length, 'models');
+            return filtered;
+        }
+
+        // 문제 카테고리별 필터된 데이터 가져오기
+        function getCategoryFilteredData(language, modality, category) {
+            if (!categoryData || !parsedData) {
+                console.warn('categoryData 또는 parsedData가 없습니다.');
+                return null;
+            }
+
+            console.log('getCategoryFilteredData:', { language, modality, category, categoryDataKeys: Object.keys(categoryData).slice(0, 5) });
+
+            const maxScore = categoryMaxScores[category] || 152;
+            const models = [];
+
+            // parsedData의 모든 모델을 순회하면서 categoryData에서 찾기
+            // categoryData의 키와 parsedData의 모델 이름이 다를 수 있으므로 매칭 필요
+            parsedData.models.forEach(parsedModel => {
+                const parsedModelName = parsedModel.name;
+                
+                // categoryData에서 모델 찾기 (정확한 매칭 또는 유사한 이름 찾기)
+                let categoryModelName = null;
+                for (const catModelName in categoryData) {
+                    // 정확한 매칭
+                    if (catModelName === parsedModelName) {
+                        categoryModelName = catModelName;
+                        break;
+                    }
+                    // displayName으로 매칭
+                    const catDisplayName = modelNameMap[catModelName] || catModelName;
+                    const parsedDisplayName = modelNameMap[parsedModelName] || parsedModelName;
+                    if (catDisplayName === parsedDisplayName) {
+                        categoryModelName = catModelName;
+                        break;
+                    }
+                }
+                
+                if (!categoryModelName) {
+                    // 매칭되지 않은 모델은 건너뛰기
+                    return;
+                }
+
+                const langData = categoryData[categoryModelName][language];
+                if (!langData) return;
+
+                const modalityData = langData[modality];
+                if (!modalityData) return;
+
+                let rawScore = null;
+                let normalizedScore = null;
+
+                // category가 '공통과목'인 경우 수학1과 수학2를 합산
+                if (category === '공통과목') {
+                    const math1Score = modalityData['수학1'] || 0;
+                    const math2Score = modalityData['수학2'] || 0;
+                    rawScore = Math.round(math1Score + math2Score); // 실제 점수는 정수
+                    normalizedScore = rawScore ? (rawScore / maxScore) * 100 : null;
+                } else {
+                    rawScore = modalityData[category] !== null && modalityData[category] !== undefined ? Math.round(modalityData[category]) : null;
+                    normalizedScore = rawScore ? (rawScore / maxScore) * 100 : null;
+                }
+
+                if (normalizedScore !== null) {
+                    models.push({
+                        name: parsedModelName, // parsedData의 원본 모델 이름 사용
+                        score: normalizedScore,
+                        rawScore: rawScore,
+                        displayName: modelNameMap[parsedModelName] || parsedModelName
+                    });
+                }
+            });
+
+            const result = models
+                .filter(model => model.score !== null)
+                .sort((a, b) => b.score - a.score)
+                .map((item, index) => ({
+                    ...item,
+                    rank: index + 1
+                }));
+            
+            console.log('카테고리 필터 결과:', result.length, 'models', result.slice(0, 3));
+            return result;
+        }
+
+        // 성능 점수에 따른 색상
+        function getBarColor(score) {
+            if (score === null) return 'rgba(156, 163, 175, 0.6)';
+            if (score >= 90) return 'rgba(34, 197, 94, 0.8)';
+            if (score >= 70) return 'rgba(234, 179, 8, 0.8)';
+            return 'rgba(239, 68, 68, 0.8)';
+        }
+
+        function getBorderColor(score) {
+            if (score === null) return 'rgba(156, 163, 175, 0.8)';
+            if (score >= 90) return 'rgba(34, 197, 94, 1)';
+            if (score >= 70) return 'rgba(234, 179, 8, 1)';
+            return 'rgba(239, 68, 68, 1)';
+        }
+
+        // 가로 막대 차트 렌더링
+        function renderHorizontalBarChart(data, containerId, title) {
+            if (!data || data.length === 0) return;
+
+            const ctx = document.getElementById(containerId);
+            if (!ctx) return;
+
+            // 기존 차트 제거
+            if (containerId === 'baselineChart' && baselineChart) {
+                baselineChart.destroy();
+            }
+            if (containerId === 'performanceChart' && performanceChart) {
+                performanceChart.destroy();
+            }
+            if (containerId === 'bestPerformanceChart' && bestPerformanceChart) {
+                bestPerformanceChart.destroy();
+            }
+
+            // null 점수 제외 (이미지 미지원이 아닌 경우)
+            const filteredData = data.filter(m => m.score !== null);
+
+            const labels = filteredData.map(m => m.displayName || m.name);
+            const scores = filteredData.map(m => m.score);
+
+            // 모델 아이콘 정보 저장
+            const modelIcons = filteredData.map(m => {
+                const modelName = m.name;
+                return modelIconMap[modelName] || null;
+            });
+
+            // 이미지 미지원 모델 확인 (원본 데이터에서 확인)
+            const hasImageModality = data.some(m => m.score === null);
+            const imageNotSupported = hasImageModality && (containerId === 'performanceChart' || containerId === 'baselineChart');
+
+            // 아이콘 데이터를 차트에 저장하기 위한 변수
+            const chartIconData = {
+                filteredData: filteredData,
+                modelIcons: modelIcons
+            };
+
+            const chartConfig = {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Performance (normalized score)',
+                        data: scores,
+                        backgroundColor: scores.map(score => getBarColor(score)),
+                        borderColor: scores.map(score => getBorderColor(score)),
+                        borderWidth: 2,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    backgroundColor: '#ffffff',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                            padding: 12,
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            callbacks: {
+                                label: (context) => {
+                                    const score = scores[context.dataIndex];
+                                    const rawScore = filteredData[context.dataIndex]?.rawScore;
+                                    if (score === null) {
+                                        return 'Score: N/A (이미지 미지원)';
+                                    }
+                                    if (rawScore !== null && rawScore !== undefined) {
+                                        return [
+                                            `Normalized: ${score.toFixed(1)}${getScoreUnit()}`,
+                                            `Raw Score: ${Math.round(rawScore)}${currentLanguage === 'ko' ? '점' : ' points'}`
+                                        ];
+                                    }
+                                    return `Score: ${score.toFixed(1)}${getScoreUnit()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 10,
+                                callback: (value) => `${value}`,
+                                font: {
+                                    size: 11
+                                },
+                                color: '#6b7280'
+                            },
+                            grid: {
+                                color: 'rgba(156, 163, 175, 0.2)'
+                            },
+                            title: {
+                                display: true,
+                                text: containerId === 'baselineChart' ? 'Performance (normalized score)' : 'Performance (normalized score)',
+                                font: {
+                                    size: 12,
+                                    weight: '600'
+                                },
+                                color: '#374151'
+                            }
+                        },
+			y: {
+			    ticks: {
+				display: false,
+				autoSkip: false,
+				font: {
+				    size: 10
+				},
+				color: '#6b7280',
+				padding: 8
+			    },
+			    grid: {
+				display: false
+			    }
+			}
+                    },
+                    animation: {
+                        duration: 750,
+                        easing: 'easeInOutQuart'
+                    },
+                    layout: {
+                        padding: {
+                            left: containerId === 'performanceChart' ? 200 : 250, // Performance 차트는 padding 줄임
+                            right: 60, // 수치 표시 공간 확보
+                            top: 10,
+                            bottom: 10
+                        }
+                    }
+                },
+                plugins: [
+			{
+			    // ✅ 닫힌 모델(네가 지정한 모델들)만 빗금 패턴
+			    id: 'closedWeightHatch',
+			    afterDatasetsDraw: (chart) => {
+				const ctx = chart.ctx;
+				const meta = chart.getDatasetMeta(0);
+				const iconData = chart.iconData;
+				if (!iconData || !iconData.filteredData) return;
+
+				ctx.save();
+				ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)'; // 빗금 색
+				ctx.lineWidth = 1;
+
+				meta.data.forEach((bar, index) => {
+				    const model = iconData.filteredData[index];
+				    if (!model || !closedWeightModelSet.has(model.name)) return;
+
+				    const { x, y, base, height } = bar;
+				    const left   = Math.min(base, x);
+				    const right  = Math.max(base, x);
+				    const top    = y - height / 2;
+				    const bottom = y + height / 2;
+				    const width  = right - left;
+
+				    ctx.save();
+				    // 막대 영역만 클리핑
+				    ctx.beginPath();
+				    ctx.rect(left, top, width, height);
+				    ctx.clip();
+
+				    // 대각선 빗금
+				    const step = 6; // 간격
+				    for (let i = -height; i < width + height; i += step) {
+					ctx.beginPath();
+					ctx.moveTo(left + i, bottom);
+					ctx.lineTo(left + i - height, top);
+					ctx.stroke();
+				    }
+
+				    ctx.restore();
+				});
+
+				ctx.restore();
+			    }
+			},
+			{
+                    id: 'valueLabel',
+                    afterDatasetsDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const meta = chart.getDatasetMeta(0);
+                        const iconData = chart.iconData;
+                        const scores = chart.data.datasets[0]?.data || [];
+
+                        meta.data.forEach((bar, index) => {
+                            const score = scores[index];
+                            const rawScore = iconData?.filteredData?.[index]?.rawScore;
+                            if (score !== null && score !== undefined) {
+                                const x = bar.x;
+                                const y = bar.y;
+
+                                ctx.save();
+                                ctx.fillStyle = '#374151';
+                                ctx.font = '600 11px Inter';
+                                ctx.textAlign = 'left';
+                                ctx.textBaseline = 'middle';
+                                
+                                // 정규화 점수 표시
+                                ctx.fillText(`${score.toFixed(1)}`, x + 5, y - 5);
+                                
+                                // 원점수 표시 (있는 경우)
+                                if (rawScore !== null && rawScore !== undefined) {
+                                    ctx.font = '400 9px Inter';
+                                    ctx.fillStyle = '#6b7280';
+                                    ctx.fillText(`(${Math.round(rawScore)})`, x + 5, y + 5);
+                                }
+                                
+                                ctx.restore();
+                            } else {
+                                // N/A 표시
+                                const x = bar.x;
+                                const y = bar.y;
+
+                                ctx.save();
+                                ctx.fillStyle = '#9ca3af';
+                                ctx.font = '600 11px Inter';
+                                ctx.textAlign = 'left';
+                                ctx.textBaseline = 'middle';
+                                ctx.fillText('N/A', x + 5, y);
+                                ctx.restore();
+                            }
+                        });
+                    }
+                }, {
+	    id: 'labelWithIcon',
+	    afterDatasetsDraw: (chart) => {
+		const ctx = chart.ctx;
+		const yAxis = chart.scales.y;
+		if (!yAxis) return;
+
+		const iconSize = 16;
+		const iconGap  = 6;   // 아이콘과 글자 사이 간격
+		const iconData = chart.iconData;
+		if (!iconData || !iconData.modelIcons) return;
+
+		const meta = chart.getDatasetMeta(0);
+
+		// y축 tick 폰트 설정 (Chart.js 설정과 최대한 맞추기)
+		const tickFont   = yAxis.options.ticks.font || {};
+		const fontSize   = tickFont.size   || 10;
+		const fontFamily = tickFont.family || 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+		const fontStyle  = tickFont.style  || '';
+		const fontWeight = tickFont.weight || '';
+		const fontString = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
+
+		ctx.font = fontString;
+		ctx.textBaseline = 'middle';
+		ctx.textAlign = 'right';
+
+		const labels = chart.data.labels || [];
+
+		meta.data.forEach((bar, index) => {
+		    const y = bar.y;
+
+		    const label = labels[index] || '';
+		    const iconPath = iconData.modelIcons[index];
+		    if (!iconPath) return;
+
+		    // 1) 텍스트를 그릴 기준 x (차트 영역 왼쪽에서 조금 떨어진 곳)
+		    const textX = yAxis.left - 8;  // 숫자 줄이면 전체가 왼쪽으로 조금 더 감
+
+		    // 2) 먼저 텍스트 그리기
+		    ctx.fillStyle = '#4b5563';
+		    ctx.fillText(label, textX, y);
+
+		    // 3) 텍스트 폭 측정
+		    const labelWidth = ctx.measureText(label).width;
+
+		    // 4) 아이콘 x = (텍스트 왼쪽) - 간격 - 아이콘 크기
+		    const labelLeftX = textX - labelWidth;
+		    const iconX = labelLeftX - iconGap - iconSize;
+
+		    const img = iconImageCache[iconPath];
+		    if (img && img.complete && img.naturalWidth > 0) {
+			ctx.save();
+			ctx.drawImage(img, iconX, y - iconSize / 2, iconSize, iconSize);
+			ctx.restore();
+		    } else {
+			// 아직 로드 안 된 경우 캐시 후 재렌더
+			if (!iconImageCache[iconPath] || !iconImageCache[iconPath].complete) {
+			    const newImg = new Image();
+			    newImg.crossOrigin = 'anonymous';
+			    newImg.onload = () => {
+				iconImageCache[iconPath] = newImg;
+				chart.update('none');
+			    };
+			    newImg.onerror = () => {
+				console.warn('Failed to load icon:', iconPath);
+			    };
+			    newImg.src = iconPath;
+			}
+		    }
+                        });
+                    }
+                }, {
+                    id: 'isoftLogo',
+                    afterDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const chartArea = chart.chartArea;
+
+                        // 화면 크기에 따른 스케일 계산
+                        const chartWidth = chartArea.right - chartArea.left;
+                        const chartHeight = chartArea.bottom - chartArea.top;
+                        const scaleFactor = Math.min(chartWidth / 800, chartHeight / 600, 1); // 기준 크기 대비 비율
+                        const scaleFactorClamped = Math.max(0.5, Math.min(1.2, scaleFactor)); // 최소 0.5, 최대 1.2
+
+                        // 차트별 설정 (스케일 적용)
+                        const chartId = chart.canvas?.id || '';
+                        const isBaseline = chartId === 'baselineChart';
+                        const baseLogoSize = isBaseline ? 48 : 38;
+                        const logoSize = baseLogoSize * scaleFactorClamped;
+                        const rightOffset = (isBaseline ? 70 : -20) * scaleFactorClamped;
+                        const bottomOffset = 20 * scaleFactorClamped;
+                        const urlPadding = 4 * scaleFactorClamped;
+                        const fontSize = Math.max(9, 11 * scaleFactorClamped); // 최소 9px
+
+                        // 우하단 위치 계산
+                        const logoX = chartArea.right - rightOffset;
+                        const logoY = chartArea.bottom - bottomOffset - logoSize;
+
+                        // 로고 이미지 그리기 (종횡비 유지)
+                        let logoWidth = logoSize;
+                        let logoHeight = logoSize;
+
+                        if (isoftLogoImage && isoftLogoImage.complete && isoftLogoImage.naturalWidth > 0) {
+                            ctx.save();
+                            // 원본 이미지의 종횡비 계산
+                            const aspectRatio = isoftLogoImage.naturalWidth / isoftLogoImage.naturalHeight;
+                            logoHeight = logoSize;
+                            logoWidth = logoHeight * aspectRatio;
+
+                            // baseline 차트는 가운데 정렬, performance 차트는 오른쪽 정렬
+                            const logoDrawX = isBaseline ? logoX - logoWidth / 2 : logoX - logoWidth;
+                            ctx.drawImage(isoftLogoImage, logoDrawX, logoY, logoWidth, logoHeight);
+                            ctx.restore();
+                        } else {
+                            // 로고가 아직 로드되지 않은 경우 재시도
+                            if (!isoftLogoImage || !isoftLogoImage.complete) {
+                                preloadIsoftLogo();
+                                setTimeout(() => {
+                                    if (chart) chart.update('none');
+                                }, 100);
+                            }
+                        }
+
+                        // URL 텍스트 그리기
+                        ctx.save();
+                        ctx.font = `${fontSize}px Inter, sans-serif`;
+                        ctx.fillStyle = '#2563eb'; // blue-600
+                        ctx.textAlign = isBaseline ? 'center' : 'right';
+                        ctx.textBaseline = 'bottom';
+
+                        const urlText = 'https://isoft.cnu.ac.kr/';
+                        const urlY = logoY + logoHeight + urlPadding + (12 * scaleFactorClamped);
+                        ctx.fillText(urlText, logoX, urlY);
+                        ctx.restore();
+                    }
+                }]
+            };
+
+            // 아이콘 미리 로드
+            preloadIcons();
+
+            if (containerId === 'baselineChart') {
+                baselineChart = new Chart(ctx, chartConfig);
+                // 차트에 아이콘 데이터 저장
+                baselineChart.iconData = chartIconData;
+                // 아이콘 로드 후 차트 업데이트
+                setTimeout(() => {
+                    if (baselineChart) baselineChart.update('none');
+                }, 500);
+            } else if (containerId === 'performanceChart') {
+                performanceChart = new Chart(ctx, chartConfig);
+                // 차트에 아이콘 데이터 저장
+                performanceChart.iconData = chartIconData;
+                // 아이콘 로드 후 차트 업데이트
+                setTimeout(() => {
+                    if (performanceChart) performanceChart.update('none');
+                }, 500);
+            }
+        }
+
+        // 테이블 렌더링
+        function renderTable(data) {
+            if (!data || data.length === 0) {
+                return '<div class="text-center py-12 text-gray-500">데이터가 없습니다.</div>';
+            }
+
+            let html = `
+                <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                    <div class="bg-gradient-to-r from-purple-600 to-purple-700 px-4 py-3">
+                        <h3 class="text-white font-semibold">Leaderboard Rankings</h3>
+                    </div>
+                    <div class="overflow-y-auto max-h-[600px]">
+                        <table class="w-full">
+                            <thead class="bg-gray-50 sticky top-0 z-10">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Rank</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Model</th>
+                                    <th class="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider" data-ko="점수" data-en="Score">Score</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+            `;
+
+            data.forEach((item, index) => {
+                const rankIcon = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+                const scoreColor = item.score === null ? 'text-gray-400' :
+                                 item.score >= 90 ? 'text-green-600' :
+                                 item.score >= 70 ? 'text-yellow-600' : 'text-red-600';
+                const bgColor = index < 3 ? 'bg-purple-25' : '';
+
+                html += `
+                    <tr class="hover:bg-purple-50 transition-colors ${bgColor}">
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <div class="flex items-center space-x-2">
+                                ${rankIcon ? `<span>${rankIcon}</span>` : ''}
+                                <span class="font-semibold text-gray-700">${item.score !== null ? `#${item.rank}` : 'N/A'}</span>
+                            </div>
+                        </td>
+			<td class="px-4 py-3">
+			    <div class="flex items-center gap-2">
+				${
+				    (modelIconMap[item.name])
+				    ? `<img src="${modelIconMap[item.name]}" class="w-5 h-5 object-contain" />`
+				    : ''
+				}
+				<span class="text-sm font-medium text-gray-900">${item.displayName}</span>
+			    </div>
+			</td>
+                        <td class="px-4 py-3 text-right whitespace-nowrap">
+                            <div class="flex flex-col items-end">
+                                <span class="text-lg font-bold ${scoreColor}">
+                                    ${item.score !== null ? `${item.score.toFixed(1)}${currentLanguage === 'ko' ? '점' : ''}` : 'N/A'}
+                                </span>
+                                ${item.rawScore !== null && item.rawScore !== undefined ? `
+                                    <span class="text-xs text-gray-500 mt-1">
+                                        (${Math.round(item.rawScore)}${currentLanguage === 'ko' ? '점' : ' points'})
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // Baseline 섹션 업데이트
+        function updateBaselineSection() {
+            const data = getFilteredData('Korean', 'Text');
+            const content = document.getElementById('baselineContent');
+
+            if (!data) {
+                content.innerHTML = '<div class="text-center py-12 text-gray-500" data-ko="Baseline 데이터를 찾을 수 없습니다." data-en="Baseline data not found.">Baseline 데이터를 찾을 수 없습니다.</div>';
+                return;
+            }
+
+            const hasNullScores = data.some(m => m.score === null);
+
+            const chartHtml = `
+                <div class="bg-white rounded-lg border border-gray-200 p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Baseline Performance Chart</h3>
+                        <button onclick="downloadChart('baselineChart', 'baseline_Korean_Text')"
+                                class="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md">
+                            <span class="text-sm font-medium">📥 Download Chart</span>
+                        </button>
+                    </div>
+                    ${hasNullScores ? `
+                    <div class="mb-4 bg-yellow-50 border-l-4 border-yellow-400 p-3">
+                        <p class="text-sm text-yellow-800">
+                            <strong data-ko="참고:" data-en="Note:">참고:</strong>
+                            <span data-ko="일부 모델은 이미지 입력을 지원하지 않아 해당 조건에서 데이터가 없습니다. N/A로 표시된 모델은 해당 조건에서 평가되지 않았습니다."
+                                  data-en="Some models do not support image input, so there is no data for these conditions. Models marked as N/A were not evaluated under these conditions.">
+                                일부 모델은 이미지 입력을 지원하지 않아 해당 조건에서 데이터가 없습니다.
+                                N/A로 표시된 모델은 해당 조건에서 평가되지 않았습니다.
+                            </span>
+                        </p>
+                    </div>
+                    ` : ''}
+                    <div class="mb-4 flex gap-4 text-sm">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-green-500"></div>
+                            <span data-ko="90점 이상" data-en="90 score and above">90점 이상</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-yellow-500"></div>
+                            <span data-ko="70-90점" data-en="70-90 score">70-90점</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-red-500"></div>
+                            <span data-ko="70점 미만" data-en="Below 70 score">70점 미만</span>
+                        </div>
+		    <div class="flex items-center gap-2">
+			<div
+			    class="w-4 h-4 rounded border border-gray-500"
+			    style="
+				background-image: repeating-linear-gradient(
+				    45deg,
+				    rgba(107,114,128,0.8) 0,
+				    rgba(107,114,128,0.8) 1px,
+				    transparent 1px,
+				    transparent 4px
+				);
+			    ">
+			</div>
+			<span data-ko="Closed 모델" data-en="Closed-weight model">Closed-weight model</span>
+		    </div>
+			<div class="flex items-center gap-2">
+			    <div
+				class="w-4 h-4 rounded border border-gray-500 bg-white-200">
+			    </div>
+			    <span data-ko="Open 모델" data-en="Open-weighted model">Open-weighted model</span>
+			</div>
+                    </div>
+                    <div class="h-[600px]" style="position: relative;">
+                        <canvas id="baselineChart"></canvas>
+                    </div>
+                </div>
+            `;
+
+            content.innerHTML = chartHtml;
+
+            setTimeout(() => {
+                renderHorizontalBarChart(data, 'baselineChart', 'Baseline Performance');
+                setLanguage(currentLanguage); // 언어 전환 재적용
+            }, 100);
+        }
+
+        // 성능 섹션 업데이트
+        function updatePerformanceSection() {
+            const language = document.getElementById('languageFilter').value;
+            const modality = document.getElementById('modalityFilter').value;
+            const category = document.getElementById('categoryFilter')?.value || 'ALL';
+
+            const data = getFilteredData(language, modality, category);
+            const content = document.getElementById('performanceContent');
+
+            if (!data) {
+                content.innerHTML = '<div class="text-center py-12 text-red-500" data-ko="선택한 필터 조건에 해당하는 데이터를 찾을 수 없습니다." data-en="No data found for the selected filter conditions.">선택한 필터 조건에 해당하는 데이터를 찾을 수 없습니다.</div>';
+                document.getElementById('fullTableContent').innerHTML = '<div class="text-center py-12 text-red-500" data-ko="데이터를 찾을 수 없습니다." data-en="Data not found.">데이터를 찾을 수 없습니다.</div>';
+                return;
+            }
+
+            const hasNullScores = data.some(m => m.score === null);
+            const isImageModality = modality === 'Image' || modality === 'Text+Image';
+
+            // Download 버튼 표시 및 업데이트
+            const downloadBtn = document.getElementById('downloadPerformanceChartBtn');
+            if (downloadBtn) {
+                downloadBtn.style.display = 'flex';
+                downloadBtn.setAttribute('onclick', `downloadChart('performanceChart', '${language}_${modality}')`);
+            }
+
+            const chartHtml = `
+                <div class="bg-white rounded-lg border border-gray-200 p-4">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Performance Visualization</h3>
+                    </div>
+                    ${hasNullScores && isImageModality ? `
+                    <div class="mb-4 bg-yellow-50 border-l-4 border-yellow-400 p-3">
+                        <p class="text-sm text-yellow-800">
+                            <strong data-ko="참고:" data-en="Note:">참고:</strong>
+                            <span data-ko="일부 모델은 이미지 입력을 지원하지 않아 해당 조건에서 데이터가 없습니다. N/A로 표시된 모델은 해당 조건에서 평가되지 않았습니다."
+                                  data-en="Some models do not support image input, so there is no data for these conditions. Models marked as N/A were not evaluated under these conditions.">
+                                일부 모델은 이미지 입력을 지원하지 않아 해당 조건에서 데이터가 없습니다.
+                                N/A로 표시된 모델은 해당 조건에서 평가되지 않았습니다.
+                            </span>
+                        </p>
+                    </div>
+                    ` : ''}
+                    <div class="mb-4 flex gap-4 text-sm">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-green-500"></div>
+                            <span data-ko="90점 이상" data-en="90 score and above">90점 이상</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-yellow-500"></div>
+                            <span data-ko="70-90점" data-en="70-90 score">70-90점</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-red-500"></div>
+                            <span data-ko="70점 미만" data-en="Below 70 score">70점 미만</span>
+                        </div>
+		    <div class="flex items-center gap-2">
+			<div
+			    class="w-4 h-4 rounded border border-gray-500"
+			    style="
+				background-image: repeating-linear-gradient(
+				    45deg,
+				    rgba(107,114,128,0.8) 0,
+				    rgba(107,114,128,0.8) 1px,
+				    transparent 1px,
+				    transparent 4px
+				);
+			    ">
+			</div>
+			<span data-ko="Closed 모델" data-en="Closed-weight model">Closed-weight model</span>
+		    </div>
+			<div class="flex items-center gap-2">
+			    <div
+				class="w-4 h-4 rounded border border-gray-500 bg-white-200">
+			    </div>
+			    <span data-ko="Open 모델" data-en="Open-weighted model">Open-weighted model</span>
+			</div>
+                    </div>
+                    <div class="h-[600px]" style="position: relative;">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            `;
+
+            content.innerHTML = chartHtml;
+
+            setTimeout(() => {
+                renderHorizontalBarChart(data, 'performanceChart', 'Performance Comparison');
+                // 테이블도 함께 업데이트
+                updateFullTableSection();
+                // Latency & Performance 차트 업데이트
+                updateLatencyPerformanceSection();
+                setLanguage(currentLanguage); // 언어 전환 재적용
+            }, 100);
+        }
+
+        // 전체 테이블 섹션 업데이트
+        function updateFullTableSection() {
+            const language = document.getElementById('languageFilter')?.value || 'Korean';
+            const modality = document.getElementById('modalityFilter')?.value || 'Text';
+            const category = document.getElementById('categoryFilter')?.value || 'ALL';
+
+            const data = getFilteredData(language, modality, category);
+            const content = document.getElementById('fullTableContent');
+
+            if (!data) {
+                content.innerHTML = '<div class="text-center py-12 text-gray-500" data-ko="데이터를 찾을 수 없습니다." data-en="Data not found.">데이터를 찾을 수 없습니다.</div>';
+                return;
+            }
+
+            content.innerHTML = renderTable(data);
+            // 언어 재적용
+            setLanguage(currentLanguage);
+        }
+
+        // Reasoning 데이터 파싱 (모달리티별)
+        function parseReasoningData(modality = null) {
+            if (!parsedData || !parsedData.reasoningRows) return null;
+
+            const result = [];
+
+            parsedData.reasoningRows.forEach(row => {
+                const effortMatch = row.name.match(/reasoning effort: (\w+)/);
+                const verbosityMatch = row.name.match(/text verbositiy: (\w+)/);
+
+                if (effortMatch && verbosityMatch) {
+                    const effort = effortMatch[1];
+                    const verbosity = verbosityMatch[1];
+
+                    // 모달리티 필터링
+                    const filteredData = modality
+                        ? row.data.filter(d => d.modality === modality)
+                        : row.data;
+
+                    const validScores = filteredData.map(d => d.value).filter(s => s !== null);
+                    if (validScores.length > 0) {
+                        const avg = validScores.reduce((a, b) => a + b, 0) / validScores.length;
+                        const max = Math.max(...validScores);
+                        const min = Math.min(...validScores);
+
+                        result.push({
+                            effort,
+                            verbosity,
+                            modality: modality || 'All',
+                            average: avg,
+                            max,
+                            min
+                        });
+                    }
+                }
+            });
+
+            return result;
+        }
+
+        // Latency & Performance 섹션 업데이트
+        function updateLatencyPerformanceSection() {
+            if (!parsedData || !latencyData) {
+                const content = document.getElementById('latencyPerformanceContent');
+                if (content) {
+                    content.innerHTML = '<div class="text-center py-12 text-gray-500" data-ko="Latency 데이터를 로드하는 중..." data-en="Loading latency data...">Latency 데이터를 로드하는 중...</div>';
+                }
+                return;
+            }
+
+            const language = document.getElementById('languageFilter')?.value || 'Korean';
+            const modality = document.getElementById('modalityFilter')?.value || 'Text';
+            const category = document.getElementById('categoryFilter')?.value || 'ALL';
+
+            const content = document.getElementById('latencyPerformanceContent');
+            
+            // Problem Category 필터가 ALL이 아닌 경우 안내 메시지 표시
+            if (category !== 'ALL') {
+                content.innerHTML = `
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg">
+                        <p class="text-gray-700 leading-relaxed" 
+                           data-ko="Latency & Performance 차트는 전체 문제(ALL)에 대해서만 제공됩니다. 문제 카테고리별 Latency 데이터는 현재 제공되지 않습니다." 
+                           data-en="Latency & Performance chart is only available for all problems (ALL). Category-specific latency data is not currently available.">
+                            Latency & Performance 차트는 전체 문제(ALL)에 대해서만 제공됩니다. 문제 카테고리별 Latency 데이터는 현재 제공되지 않습니다.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            const performanceData = getFilteredData(language, modality, category);
+
+            if (!performanceData || performanceData.length === 0) {
+                content.innerHTML = '<div class="text-center py-12 text-gray-500" data-ko="데이터를 찾을 수 없습니다." data-en="Data not found.">데이터를 찾을 수 없습니다.</div>';
+                return;
+            }
+
+            // Latency 데이터와 Performance 데이터 결합
+            const combinedData = performanceData
+                .map(item => {
+                    const latencyKey = `${language}_${modality}`;
+                    const latency = latencyData[item.name]?.[latencyKey] || null;
+                    return {
+                        ...item,
+                        latency: latency,
+                        overBaseline: latency !== null && latency > BASELINE_TIME
+                    };
+                })
+                .filter(item => item.latency !== null) // latency가 있는 모델만
+                .sort((a, b) => a.latency - b.latency); // latency 순으로 정렬
+
+            if (combinedData.length === 0) {
+                content.innerHTML = '<div class="text-center py-12 text-gray-500" data-ko="Latency 데이터가 없습니다." data-en="No latency data available.">Latency 데이터가 없습니다.</div>';
+                return;
+            }
+
+            const chartHtml = `
+                <div class="bg-white rounded-lg border border-gray-200 p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <div></div>
+                        <button onclick="downloadChart('latencyPerformanceChart', 'latency_performance_${language}_${modality}')"
+                                class="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md">
+                            <span class="text-sm font-medium">📥 Download Chart</span>
+                        </button>
+                    </div>
+                    <div class="mb-4 flex gap-4 text-sm flex-wrap">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-green-500"></div>
+                            <span data-ko="Latency (막대) ≤ 시험시간" data-en="Latency (bar) ≤ Exam Time">Latency (bar) ≤ Exam Time</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-red-500"></div>
+                            <span data-ko="Latency (막대) > 시험시간" data-en="Latency (bar) > Exam Time">Latency (bar) > Exam Time</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <svg width="20" height="4" style="display: block;">
+                                <line x1="0" y1="2" x2="20" y2="2" stroke="rgba(129, 199, 132, 0.8)" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                            <span data-ko="Performance (선)" data-en="Performance (line)">Performance (line)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 border-2 border-red-500" style="height: 2px; border-style: dashed;"></div>
+                            <span data-ko="시험시간 (152분)" data-en="Exam Time (152 minutes)">Exam Time (152 minutes)</span>
+                        </div>
+                    </div>
+                    <div id="latencyPerformanceChartContainer" class="latency-performance-chart-container" style="background: white; padding: 16px;">
+                        <div class="h-[800px]" style="position: relative;">
+                            <canvas id="latencyPerformanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            content.innerHTML = chartHtml;
+
+            setTimeout(() => {
+                renderLatencyPerformanceChart(combinedData, 'latencyPerformanceChart', modality);
+                setLanguage(currentLanguage);
+            }, 100);
+        }
+
+        // Latency & Performance 차트 렌더링
+        function renderLatencyPerformanceChart(data, containerId, modality) {
+            if (!data || data.length === 0) return;
+
+            const ctx = document.getElementById(containerId);
+            if (!ctx) return;
+
+            // 기존 차트 제거
+            if (latencyPerformanceChart) {
+                latencyPerformanceChart.destroy();
+            }
+
+            const labels = data.map(m => m.displayName || m.name);
+            const latencies = data.map(m => m.latency);
+            const scores = data.map(m => m.score);
+            const colors = data.map(m => m.overBaseline ? 'rgba(229, 115, 115, 0.8)' : 'rgba(129, 199, 132, 0.8)'); // 빨강/초록
+            const borderColors = data.map(m => m.overBaseline ? 'rgba(229, 115, 115, 1)' : 'rgba(129, 199, 132, 1)');
+
+            // 최대 latency 계산
+            const maxLatency = Math.max(...latencies);
+            const maxX = Math.max(maxLatency * 1.12, BASELINE_TIME * 1.15);
+
+            const chartConfig = {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Latency (minutes)',
+                            data: latencies,
+                            backgroundColor: colors,
+                            borderColor: borderColors,
+                            borderWidth: 2,
+                            borderRadius: 4,
+                            yAxisID: 'y',
+                            xAxisID: 'x'
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // 범례 제거 (설명 부분에 직접 표시)
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                            padding: 12,
+                            callbacks: {
+                                label: (context) => {
+                                    const datasetLabel = context.dataset.label || '';
+                                    const value = context.parsed.x || context.parsed.y;
+                                    const index = context.dataIndex;
+                                    const item = data[index];
+                                    
+                                    if (datasetLabel.includes('Latency')) {
+                                        return `Latency: ${value.toFixed(1)} minutes`;
+                                    }
+                                    return '';
+                                },
+                                afterLabel: (context) => {
+                                    const index = context.dataIndex;
+                                    const item = data[index];
+                                    if (item) {
+                                        const lines = [];
+                                        if (item.score !== null && item.score !== undefined) {
+                                            lines.push(`Score: ${item.score.toFixed(1)}${getScoreUnit()}`);
+                                        }
+                                        if (item.overBaseline) {
+                                            lines.push('Exceeds exam time');
+                                        } else {
+                                            lines.push('Within exam time');
+                                        }
+                                        return lines;
+                                    }
+                                    return '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            beginAtZero: true,
+                            max: maxX,
+                            ticks: {
+                                stepSize: 60,
+                                callback: (value) => `${value}`
+                            },
+                            title: {
+                                display: true,
+                                text: 'Latency (minutes)',
+                                font: {
+                                    size: 14,
+                                    weight: '600'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(156, 163, 175, 0.2)'
+                            }
+                        },
+                        x1: {
+                            type: 'linear',
+                            position: 'top',
+                            beginAtZero: true,
+                            max: 105,
+                            ticks: {
+                                stepSize: 10,
+                                callback: (value) => `${value}`
+                            },
+                            title: {
+                                display: true,
+                                text: 'Normalized Score',
+                                font: {
+                                    size: 14,
+                                    weight: '600'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(156, 163, 175, 0.15)',
+                                lineWidth: 1,
+                                drawOnChartArea: true
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                display: false
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 300,
+                            right: 60,
+                            top: 60,
+                            bottom: 80 // Exam Time 레이블을 위한 여유 공간 추가
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'latencyScoreLines',
+                    afterDatasetsDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const xScale = chart.scales.x;
+                        const x1Scale = chart.scales.x1;
+                        const yScale = chart.scales.y;
+                        const meta = chart.getDatasetMeta(0);
+                        const chartData = chart.chartData || [];
+
+                        // Score를 선으로 그리기
+                        meta.data.forEach((bar, index) => {
+                            const item = chartData[index];
+                            if (!item || item.score === null || item.score === undefined) return;
+
+                            const score = item.score;
+                            const barY = bar.y; // 막대의 중앙 y 좌표 (픽셀)
+                            const barHeightData = bar.height || 0.5; // 막대 높이 (데이터 단위)
+                            const color = item.overBaseline ? 'rgba(229, 115, 115, 0.8)' : 'rgba(129, 199, 132, 0.8)';
+                            
+                            // 막대의 top 위치 계산 (픽셀)
+                            // bar.y는 픽셀 단위이고, bar.height는 데이터 단위이므로 yScale을 사용해 변환
+                            const barYData = yScale.getValueForPixel(barY);
+                            const barTopData = barYData - barHeightData / 2;
+                            const barTopY = yScale.getPixelForValue(barTopData);
+                            
+                            // 선 그리기 (0부터 score까지) - 각 막대의 중앙 y좌표보다 위에 위치
+                            const x0 = x1Scale.getPixelForValue(0);
+                            const x1 = x1Scale.getPixelForValue(score);
+                            // Input Modality에 따라 위치 조정
+                            // text-only일 때는 -11, 나머지(Image-only, Text+Figure)일 때는 -18
+                            const currentModality = chart.chartModality || 'Text';
+                            const lineY = currentModality === 'Text' ? barY - 11 : barY - 18;
+                            
+                            ctx.save();
+                            ctx.strokeStyle = color;
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.moveTo(x0, lineY);
+                            ctx.lineTo(x1, lineY);
+                            ctx.stroke();
+                            
+                            // 끝점 마커
+                            ctx.fillStyle = color;
+                            ctx.beginPath();
+                            ctx.arc(x1, lineY, 6, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.strokeStyle = 'white';
+                            ctx.lineWidth = 2;
+                            ctx.stroke();
+                            
+                            // Score 값 표기
+                            ctx.fillStyle = '#212121';
+                            ctx.font = '600 11px Inter';
+                            ctx.textAlign = 'left';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText(score.toFixed(1), x1 + 8, lineY);
+                            ctx.restore();
+                        });
+                    }
+                }, {
+                    id: 'latencyBaselineLine',
+                    afterDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const xScale = chart.scales.x;
+                        const yScale = chart.scales.y;
+                        
+                        // 시험시간 수직선
+                        const xPos = xScale.getPixelForValue(BASELINE_TIME);
+                        ctx.save();
+                        ctx.strokeStyle = '#D32F2F';
+                        ctx.lineWidth = 2;
+                        ctx.setLineDash([5, 5]);
+                        ctx.beginPath();
+                        ctx.moveTo(xPos, yScale.top);
+                        ctx.lineTo(xPos, yScale.bottom);
+                        ctx.stroke();
+                        ctx.restore();
+                        
+                        // 시험시간 레이블 - x축 레이블과 겹치지 않도록 더 아래에 배치
+                        const labelY = yScale.bottom + 35;
+                        const labelText = 'Exam Time';
+                        
+                        // 레이블 텍스트 크기 측정
+                        ctx.save();
+                        ctx.font = '12px Inter, sans-serif';
+                        const textMetrics = ctx.measureText(labelText);
+                        const textWidth = textMetrics.width;
+                        const textHeight = 12;
+                        
+                        // 옅은 노란색 둥근 네모박스 배경 그리기
+                        const padding = 8;
+                        const boxWidth = textWidth + padding * 2;
+                        const boxHeight = textHeight + padding * 2;
+                        const boxX = xPos - boxWidth / 2;
+                        const boxY = labelY - padding;
+                        const borderRadius = 6;
+                        
+                        ctx.fillStyle = 'rgba(255, 255, 200, 0.7)'; // 옅은 노란색
+                        ctx.beginPath();
+                        // 둥근 사각형 그리기 (수동으로)
+                        ctx.moveTo(boxX + borderRadius, boxY);
+                        ctx.lineTo(boxX + boxWidth - borderRadius, boxY);
+                        ctx.quadraticCurveTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + borderRadius);
+                        ctx.lineTo(boxX + boxWidth, boxY + boxHeight - borderRadius);
+                        ctx.quadraticCurveTo(boxX + boxWidth, boxY + boxHeight, boxX + boxWidth - borderRadius, boxY + boxHeight);
+                        ctx.lineTo(boxX + borderRadius, boxY + boxHeight);
+                        ctx.quadraticCurveTo(boxX, boxY + boxHeight, boxX, boxY + boxHeight - borderRadius);
+                        ctx.lineTo(boxX, boxY + borderRadius);
+                        ctx.quadraticCurveTo(boxX, boxY, boxX + borderRadius, boxY);
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.restore();
+                        
+                        // 레이블 텍스트 그리기
+                        ctx.save();
+                        ctx.fillStyle = '#D32F2F';
+                        ctx.font = '12px Inter, sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'top';
+                        ctx.fillText(labelText, xPos, labelY);
+                        ctx.restore();
+                    }
+                }, {
+                    id: 'latencyModelLabels',
+                    afterDatasetsDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const yAxis = chart.scales.y;
+                        if (!yAxis) return;
+
+                        const meta = chart.getDatasetMeta(0);
+                        const labels = chart.data.labels || [];
+                        const iconSize = 16;
+                        const iconGap = 6;
+
+                        ctx.font = '11px Inter, system-ui, sans-serif';
+                        ctx.textBaseline = 'middle';
+                        ctx.textAlign = 'right';
+
+                        meta.data.forEach((bar, index) => {
+                            const y = bar.y;
+                            const label = labels[index] || '';
+                            const item = data[index];
+                            
+                            // 모델 아이콘 표시
+                            if (item && modelIconMap[item.name]) {
+                                const iconPath = modelIconMap[item.name];
+                                const textX = yAxis.left - 8;
+                                ctx.fillStyle = '#4b5563';
+                                ctx.fillText(label, textX, y);
+                                
+                                const labelWidth = ctx.measureText(label).width;
+                                const labelLeftX = textX - labelWidth;
+                                const iconX = labelLeftX - iconGap - iconSize;
+                                
+                                const img = iconImageCache[iconPath];
+                                if (img && img.complete && img.naturalWidth > 0) {
+                                    ctx.save();
+                                    ctx.drawImage(img, iconX, y - iconSize / 2, iconSize, iconSize);
+                                    ctx.restore();
+                                }
+                            } else {
+                                const textX = yAxis.left - 8;
+                                ctx.fillStyle = '#4b5563';
+                                ctx.fillText(label, textX, y);
+                            }
+                        });
+                    }
+                }, {
+                    id: 'latencyValueLabels',
+                    afterDatasetsDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const meta = chart.getDatasetMeta(0);
+                        const latencies = chart.data.datasets[0]?.data || [];
+                        const scores = chart.data.datasets[1]?.data || [];
+                        const xScale = chart.scales.x;
+                        const x1Scale = chart.scales.x1;
+
+                        const chartData = chart.chartData || [];
+                        
+                        meta.data.forEach((bar, index) => {
+                            const latency = latencies[index];
+                            const item = chartData[index];
+                            
+                            if (latency !== null && latency !== undefined) {
+                                // Latency 값 표시
+                                const x = bar.x;
+                                const y = bar.y;
+                                const xPos = xScale.getPixelForValue(latency);
+                                
+                                ctx.save();
+                                ctx.fillStyle = item && item.overBaseline ? '#D32F2F' : '#424242';
+                                ctx.font = '600 11px Inter';
+                                ctx.textAlign = 'left';
+                                ctx.textBaseline = 'middle';
+                                ctx.fillText(`${latency.toFixed(0)}min`, xPos + 5, y);
+                                ctx.restore();
+                            }
+                        });
+                    }
+                }, {
+                    id: 'latencyIsoftLogo',
+                    afterDraw: (chart) => {
+                        if (chart.exportMode === 'pdf') {
+                            return;
+                        }
+                        
+                        const ctx = chart.ctx;
+                        const chartArea = chart.chartArea;
+                        const x1Scale = chart.scales.x1; // 상단 x축
+
+                        const chartWidth = chartArea.right - chartArea.left;
+                        const chartHeight = chartArea.bottom - chartArea.top;
+                        const scaleFactor = Math.min(chartWidth / 800, chartHeight / 600, 1);
+                        const scaleFactorClamped = Math.max(0.5, Math.min(1.2, scaleFactor));
+
+                        const logoSize = 38 * scaleFactorClamped;
+                        const rightOffset = 20 * scaleFactorClamped;
+                        const topOffset = 20 * scaleFactorClamped; // 상단 x축 기준 아래
+                        const urlPadding = 4 * scaleFactorClamped;
+                        const fontSize = Math.max(9, 11 * scaleFactorClamped);
+
+                        const logoX = chartArea.right - rightOffset;
+                        // 상단 x축 아래에 위치 (x1Scale의 bottom 위치 사용)
+                        const logoY = x1Scale.bottom + topOffset;
+
+                        let logoWidth = logoSize;
+                        let logoHeight = logoSize;
+
+                        if (isoftLogoImage && isoftLogoImage.complete && isoftLogoImage.naturalWidth > 0) {
+                            ctx.save();
+                            const aspectRatio = isoftLogoImage.naturalWidth / isoftLogoImage.naturalHeight;
+                            logoHeight = logoSize;
+                            logoWidth = logoHeight * aspectRatio;
+                            
+                            const logoDrawX = logoX - logoWidth;
+                            ctx.drawImage(isoftLogoImage, logoDrawX, logoY, logoWidth, logoHeight);
+                            ctx.restore();
+                        } else {
+                            if (!isoftLogoImage || !isoftLogoImage.complete) {
+                                preloadIsoftLogo();
+                                setTimeout(() => {
+                                    if (chart) chart.update('none');
+                                }, 100);
+                            }
+                        }
+                        
+                        ctx.save();
+                        ctx.font = `${fontSize}px Inter, sans-serif`;
+                        ctx.fillStyle = '#2563eb';
+                        ctx.textAlign = 'right';
+                        ctx.textBaseline = 'top';
+                        
+                        const urlText = 'https://isoft.cnu.ac.kr/';
+                        const urlY = logoY + logoHeight + urlPadding;
+                        ctx.fillText(urlText, logoX, urlY);
+                        ctx.restore();
+                    }
+                }]
+            };
+
+            latencyPerformanceChart = new Chart(ctx, chartConfig);
+            latencyPerformanceChart.chartData = data;
+            latencyPerformanceChart.chartModality = modality; // Input Modality 정보 저장
+        }
+
+        // Reasoning 섹션 업데이트
+        function updateReasoningSection() {
+            const content = document.getElementById('reasoningContent');
+
+            // 모달리티별로 데이터 파싱
+            const modalities = ['Text', 'Image', 'Text+Image'];
+            const modalityData = {};
+            modalities.forEach(mod => {
+                modalityData[mod] = parseReasoningData(mod);
+            });
+
+            // 모든 모달리티에 데이터가 없는지 확인
+            const hasAnyData = modalities.some(mod => modalityData[mod] && modalityData[mod].length > 0);
+            if (!hasAnyData) {
+                content.innerHTML = '<div class="text-center py-12 text-gray-500" data-ko="Reasoning 분석 데이터가 없습니다." data-en="No reasoning analysis data available.">Reasoning 분석 데이터가 없습니다.</div>';
+                return;
+            }
+
+            // 모달리티 선택 드롭다운과 차트 생성
+            let html = `
+                <div class="gradient-filter rounded-lg p-5 border border-purple-200 mb-6">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2" data-ko="Input Modality" data-en="Input Modality">Input Modality</label>
+                    <select id="reasoningModalityFilter" onchange="updateReasoningChart()" class="w-full md:w-auto appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all cursor-pointer">
+                        ${modalities.map(mod => `<option value="${mod}">${mod}</option>`).join('')}
+                    </select>
+                </div>
+            `;
+
+            // 각 모달리티별로 차트와 테이블 생성
+            modalities.forEach((modality, modIdx) => {
+                const data = modalityData[modality] || [];
+                if (data.length === 0) return;
+
+                const chartId = `reasoningChart_${modality.replace('+', 'Plus')}`;
+                const tableId = `reasoningTable_${modality.replace('+', 'Plus')}`;
+                const displayStyle = modIdx === 0 ? 'block' : 'none';
+
+                html += `
+                    <div id="reasoning_${modality.replace('+', 'Plus')}" class="reasoning-modality-section" style="display: ${displayStyle};">
+                        ${renderReasoningTable(data, tableId, modality)}
+                    </div>
+                `;
+            });
+
+            content.innerHTML = html;
+
+            // 초기 모달리티 표시
+            setTimeout(() => {
+                updateReasoningChart();
+                setLanguage(currentLanguage);
+            }, 200);
+        }
+
+        // Reasoning 차트 렌더링
+        function renderReasoningChart(data, chartId, modality) {
+            const efforts = ['minimal', 'low', 'medium', 'high'];
+            const verbosities = ['low', 'medium', 'high'];
+            const verbosityColors = {
+                'low': '#3b82f6',
+                'medium': '#f59e0b',
+                'high': '#8b5cf6'
+            };
+
+            return `
+                <div class="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Reasoning Performance - ${modality}</h3>
+                        <button onclick="downloadChart('${chartId}', 'gpt5_reasoning_${modality}')"
+                                class="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md">
+                            <span class="text-sm font-medium">📥 Download Chart</span>
+                        </button>
+                    </div>
+                    <div class="h-[500px]">
+                        <canvas id="${chartId}"></canvas>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Reasoning 테이블 렌더링
+        function renderReasoningTable(data, tableId, modality) {
+            let tableHtml = `
+                <div class="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4" data-ko="Reasoning Performance - ${modality}" data-en="Reasoning Performance - ${modality}">Reasoning Performance - ${modality}</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase" data-ko="Reasoning Effort" data-en="Reasoning Effort">Reasoning Effort</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase" data-ko="Verbosity" data-en="Verbosity">Verbosity</th>
+                                    <th class="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase" data-ko="Performance" data-en="Performance">Performance</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+            `;
+
+            const effortOrder = { 'minimal': 0, 'low': 1, 'medium': 2, 'high': 3 };
+            const verbOrder = { 'low': 0, 'medium': 1, 'high': 2 };
+            const effortColors = {
+                'minimal': 'bg-blue-50',
+                'low': 'bg-purple-50',
+                'medium': 'bg-pink-50',
+                'high': 'bg-indigo-50'
+            };
+            const verbosityColors = {
+                'low': 'bg-cyan-50',
+                'medium': 'bg-amber-50',
+                'high': 'bg-rose-50'
+            };
+
+            data.sort((a, b) => {
+                if (effortOrder[a.effort] !== effortOrder[b.effort]) {
+                    return effortOrder[a.effort] - effortOrder[b.effort];
+                }
+                return verbOrder[a.verbosity] - verbOrder[b.verbosity];
+            }).forEach((item, index) => {
+                const avgColor = item.average >= 90 ? 'text-green-600' : item.average >= 70 ? 'text-yellow-600' : 'text-red-600';
+                // effort와 verbosity에 따라 배경색 적용
+                const effortBgColor = effortColors[item.effort] || 'bg-gray-50';
+                const verbBgColor = verbosityColors[item.verbosity] || 'bg-gray-50';
+
+                tableHtml += `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-3 text-sm"><span class="px-2 py-1 rounded ${effortBgColor}">${item.effort}</span></td>
+                        <td class="px-4 py-3 text-sm"><span class="px-2 py-1 rounded ${verbBgColor}">${item.verbosity}</span></td>
+                        <td class="px-4 py-3 text-right text-sm font-semibold ${avgColor}">${item.average.toFixed(1)}${getScoreUnit()}</td>
+                    </tr>
+                `;
+            });
+
+            tableHtml += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            return tableHtml;
+        }
+
+        // Reasoning 차트 업데이트 (테이블만 표시)
+        function updateReasoningChart() {
+            const selectedModality = document.getElementById('reasoningModalityFilter')?.value;
+            if (!selectedModality) return;
+
+            const modalities = ['Text', 'Image', 'Text+Image'];
+
+            // 모든 섹션 숨기기
+            modalities.forEach(mod => {
+                const section = document.getElementById(`reasoning_${mod.replace('+', 'Plus')}`);
+                if (section) section.style.display = 'none';
+            });
+
+            // 선택된 섹션 표시
+            const selectedSection = document.getElementById(`reasoning_${selectedModality.replace('+', 'Plus')}`);
+            if (selectedSection) selectedSection.style.display = 'block';
+        }
+
+        // 모델별 Best 성능 섹션 업데이트
+        function updateBestPerformanceSection() {
+            if (!parsedData) return;
+
+            const content = document.getElementById('bestPerformanceContent');
+            const bestScores = [];
+
+            // 각 모델에 대해 모든 언어와 모달리티 조합 중 최고 성능 찾기
+            parsedData.models.forEach(model => {
+                let bestScore = null;
+                let bestConfigs = []; // 동일한 베스트 점수를 가진 모든 조합 저장
+
+                parsedData.columnMap.forEach((col, index) => {
+                    const score = model.scores[index];
+                    if (score && score.value !== null) {
+                        if (bestScore === null || score.value > bestScore) {
+                            bestScore = score.value;
+                            bestConfigs = [{
+                                language: col.language,
+                                modality: col.modality
+                            }];
+                        } else if (score.value === bestScore) {
+                            // 동일한 베스트 점수를 가진 조합 추가
+                            bestConfigs.push({
+                                language: col.language,
+                                modality: col.modality
+                            });
+                        }
+                    }
+                });
+
+                if (bestScore !== null) {
+                    // 실제 점수 계산
+                    const rawScore = Math.round((bestScore / 100) * 152);
+                    
+                    // 모든 베스트 조합에 대해 항목 생성
+                    bestConfigs.forEach(config => {
+                        bestScores.push({
+                            name: model.name,
+                            displayName: modelNameMap[model.name] || model.name,
+                            score: bestScore,
+                            rawScore: rawScore,
+                            config: config
+                        });
+                    });
+                }
+            });
+
+            // 점수순으로 정렬
+            bestScores.sort((a, b) => b.score - a.score);
+
+            if (bestScores.length === 0) {
+                content.innerHTML = '<div class="text-center py-12 text-gray-500" data-ko="데이터가 없습니다." data-en="No data available.">데이터가 없습니다.</div>';
+                return;
+            }
+
+            const chartHtml = `
+                <div class="bg-white rounded-lg border border-gray-200 p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800" data-ko="Model Best Performance Chart" data-en="Model Best Performance Chart">Model Best Performance Chart</h3>
+                        <button onclick="downloadChart('bestPerformanceChart', 'best_performance')"
+                                class="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md">
+                            <span class="text-sm font-medium">📥 Download Chart</span>
+                        </button>
+                    </div>
+                    <div class="mb-4 flex gap-4 text-sm">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-green-500"></div>
+                            <span data-ko="90점 이상" data-en="90 score and above">90점 이상</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-yellow-500"></div>
+                            <span data-ko="70-90점" data-en="70-90 score">70-90점</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-red-500"></div>
+                            <span data-ko="70점 미만" data-en="Below 70 score">70점 미만</span>
+                        </div>
+                    </div>
+                    <div id="bestPerformanceChartContainer" class="best-performance-chart-container" style="background: white; padding: 16px;">
+                        <div class="h-[600px]" style="position: relative;">
+                            <canvas id="bestPerformanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            content.innerHTML = chartHtml;
+
+            setTimeout(() => {
+                renderBestPerformanceChart(bestScores, 'bestPerformanceChart');
+                setLanguage(currentLanguage);
+            }, 100);
+        }
+
+        // Best 성능 차트 렌더링
+        function renderBestPerformanceChart(data, containerId) {
+            if (!data || data.length === 0) return;
+
+            const ctx = document.getElementById(containerId);
+            if (!ctx) return;
+
+            // 기존 차트 제거
+            if (bestPerformanceChart) {
+                bestPerformanceChart.destroy();
+            }
+
+            // 라벨에 모델 이름과 조합 정보 포함
+            const labels = data.map(m => {
+                const modelName = m.displayName || m.name;
+                const config = m.config;
+                if (config) {
+                    return `${modelName} (${config.language}, ${config.modality})`;
+                }
+                return modelName;
+            });
+            const scores = data.map(m => m.score);
+            const chartData = data; // 플러그인에서 사용하기 위해 저장
+
+            const chartConfig = {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Best Performance',
+                        data: scores,
+                        backgroundColor: scores.map(score => getBarColor(score)),
+                        borderColor: scores.map(score => getBorderColor(score)),
+                        borderWidth: 2,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                            padding: 12,
+                            callbacks: {
+                                afterLabel: (context) => {
+                                    const item = data[context.dataIndex];
+                                    const lines = [];
+                                    if (item && item.config) {
+                                        lines.push(`Language: ${item.config.language}`);
+                                        lines.push(`Modality: ${item.config.modality}`);
+                                    }
+                                    if (item && item.rawScore !== null && item.rawScore !== undefined) {
+                                        lines.push(`Raw Score: ${item.rawScore}${currentLanguage === 'ko' ? '점' : ' points'}`);
+                                    }
+                                    return lines;
+                                },
+                                label: (context) => {
+                                    const score = scores[context.dataIndex];
+                                    return `Best Score: ${score.toFixed(1)}${getScoreUnit()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 10
+                            },
+                            title: {
+                                display: true,
+                                text: 'Normalized Score'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                display: false
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 300, // 모델 이름과 조합 정보를 위한 공간 확보
+                            right: 60,
+                            top: 10,
+                            bottom: 10
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'bestPerformanceLabels',
+                    afterDatasetsDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const yAxis = chart.scales.y;
+                        if (!yAxis) return;
+
+                        const meta = chart.getDatasetMeta(0);
+                        const labels = chart.data.labels || [];
+                        const iconSize = 16;
+                        const iconGap = 6;
+
+                        ctx.font = '10px Inter, system-ui, sans-serif';
+                        ctx.textBaseline = 'middle';
+                        ctx.textAlign = 'right';
+
+                        const chartData = chart.chartData || [];
+                        
+                        meta.data.forEach((bar, index) => {
+                            const y = bar.y;
+                            const label = labels[index] || '';
+                            const item = chartData[index];
+                            
+                            // 모델 아이콘 표시
+                            if (item && modelIconMap[item.name]) {
+                                const iconPath = modelIconMap[item.name];
+                                const textX = yAxis.left - 8;
+                                ctx.fillStyle = '#4b5563';
+                                ctx.fillText(label, textX, y);
+                                
+                                const labelWidth = ctx.measureText(label).width;
+                                const labelLeftX = textX - labelWidth;
+                                const iconX = labelLeftX - iconGap - iconSize;
+                                
+                                const img = iconImageCache[iconPath];
+                                if (img && img.complete && img.naturalWidth > 0) {
+                                    ctx.save();
+                                    ctx.drawImage(img, iconX, y - iconSize / 2, iconSize, iconSize);
+                                    ctx.restore();
+                                }
+                            } else {
+                                // 아이콘이 없는 경우 텍스트만
+                                const textX = yAxis.left - 8;
+                                ctx.fillStyle = '#4b5563';
+                                ctx.fillText(label, textX, y);
+                            }
+                        });
+                    }
+                }, {
+                    id: 'bestPerformanceValueLabel',
+                    afterDatasetsDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const meta = chart.getDatasetMeta(0);
+                        const scores = chart.data.datasets[0]?.data || [];
+                        const chartData = chart.chartData || [];
+
+                        meta.data.forEach((bar, index) => {
+                            const score = scores[index];
+                            const item = chartData[index];
+                            if (score !== null && score !== undefined) {
+                                const x = bar.x;
+                                const y = bar.y;
+
+                                ctx.save();
+                                // 정규화 점수 표시
+                                ctx.fillStyle = '#374151';
+                                ctx.font = '600 11px Inter';
+                                ctx.textAlign = 'left';
+                                ctx.textBaseline = 'middle';
+                                ctx.fillText(score.toFixed(1), x + 5, y - 5);
+                                
+                                // 실제 점수 표시 (있는 경우)
+                                if (item && item.rawScore !== null && item.rawScore !== undefined) {
+                                    ctx.font = '400 9px Inter';
+                                    ctx.fillStyle = '#6b7280';
+                                    ctx.fillText(`(${item.rawScore})`, x + 5, y + 5);
+                                }
+                                ctx.restore();
+                            }
+                        });
+                    }
+                }, {
+                    id: 'bestPerformanceIsoftLogo',
+                    afterDraw: (chart) => {
+                        // PDF 저장 모드일 때는 로고를 그리지 않음
+                        if (chart.exportMode === 'pdf') {
+                            return;
+                        }
+                        
+                        const ctx = chart.ctx;
+                        const chartArea = chart.chartArea;
+
+                        // 화면 크기에 따른 스케일 계산
+                        const chartWidth = chartArea.right - chartArea.left;
+                        const chartHeight = chartArea.bottom - chartArea.top;
+                        const scaleFactor = Math.min(chartWidth / 800, chartHeight / 600, 1);
+                        const scaleFactorClamped = Math.max(0.5, Math.min(1.2, scaleFactor));
+
+                        const logoSize = 38 * scaleFactorClamped;
+                        const rightOffset = -20 * scaleFactorClamped;
+                        const bottomOffset = 20 * scaleFactorClamped;
+                        const urlPadding = 4 * scaleFactorClamped;
+                        const fontSize = Math.max(9, 11 * scaleFactorClamped);
+
+                        const logoX = chartArea.right - rightOffset;
+                        const logoY = chartArea.bottom - bottomOffset - logoSize;
+
+                        let logoWidth = logoSize;
+                        let logoHeight = logoSize;
+
+                        if (isoftLogoImage && isoftLogoImage.complete && isoftLogoImage.naturalWidth > 0) {
+                            ctx.save();
+                            const aspectRatio = isoftLogoImage.naturalWidth / isoftLogoImage.naturalHeight;
+                            logoHeight = logoSize;
+                            logoWidth = logoHeight * aspectRatio;
+                            
+                            const logoDrawX = logoX - logoWidth;
+                            ctx.drawImage(isoftLogoImage, logoDrawX, logoY, logoWidth, logoHeight);
+                            ctx.restore();
+                        } else {
+                            if (!isoftLogoImage || !isoftLogoImage.complete) {
+                                preloadIsoftLogo();
+                                setTimeout(() => {
+                                    if (chart) chart.update('none');
+                                }, 100);
+                            }
+                        }
+                        
+                        ctx.save();
+                        ctx.font = `${fontSize}px Inter, sans-serif`;
+                        ctx.fillStyle = '#2563eb';
+                        ctx.textAlign = 'right';
+                        ctx.textBaseline = 'bottom';
+                        
+                        const urlText = 'https://isoft.cnu.ac.kr/';
+                        const urlY = logoY + logoHeight + urlPadding + (12 * scaleFactorClamped);
+                        ctx.fillText(urlText, logoX, urlY);
+                        ctx.restore();
+                    }
+                }]
+            };
+
+            bestPerformanceChart = new Chart(ctx, chartConfig);
+            bestPerformanceChart.chartData = data; // 차트에 데이터 저장
+        }
+
+        // 차트 다운로드
+        function downloadChart(chartId, filename) {
+            let chart;
+            if (chartId === 'baselineChart') {
+                chart = baselineChart;
+            } else if (chartId === 'performanceChart') {
+                chart = performanceChart;
+            } else if (chartId === 'bestPerformanceChart') {
+                chart = bestPerformanceChart;
+            } else if (chartId === 'latencyPerformanceChart') {
+                chart = latencyPerformanceChart;
+            } else if (chartId.startsWith('reasoningChart_')) {
+                // 모달리티별 reasoning 차트
+                const modality = chartId.replace('reasoningChart_', '').replace('Plus', '+');
+                chart = window[`reasoningChart_${modality.replace('+', 'Plus')}`];
+            }
+
+            if (!chart) return;
+
+            const url = chart.toBase64Image('image/png', 1);
+            const link = document.createElement('a');
+            link.download = `cast_leaderboard_${filename}_${new Date().toISOString().split('T')[0].replace(/-/g, '')}.png`;
+            link.href = url;
+            link.click();
+        }
+
+        // TSV 파일 로드
+        function loadTSVFile() {
+            const fileInput = document.getElementById('tsvFileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('파일을 선택해주세요.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    rawData = e.target.result;
+                    parsedData = parseTSV(rawData);
+                    document.getElementById('fileStatus').textContent = `✓ ${file.name} 로드 완료`;
+                    updateBaselineSection();
+                    updatePerformanceSection();
+                    updateReasoningSection();
+                } catch (error) {
+                    document.getElementById('fileStatus').textContent = `✗ 오류: ${error.message}`;
+                    console.error('TSV 파싱 오류:', error);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // 필터 변경 이벤트 리스너
+        document.getElementById('languageFilter').addEventListener('change', updatePerformanceSection);
+        document.getElementById('modalityFilter').addEventListener('change', updatePerformanceSection);
+        document.getElementById('categoryFilter').addEventListener('change', updatePerformanceSection);
+
+        // 초기 로드
+        window.addEventListener('DOMContentLoaded', function() {
+            // 초기 언어 설정 (영어)
+            setLanguage('en');
+
+            // Input Language 필터를 Korean으로 설정 (초기 설정)
+            const languageFilter = document.getElementById('languageFilter');
+            if (languageFilter) {
+                languageFilter.value = 'Korean';
+            }
+
+            // Vercel 배포 환경에서도 작동하도록 경로 처리
+            const defaultTSVPath = 'data/2026_math_odd.tsv';
+            const categoryTSVPath = 'sample/ablation_by_prob_area.tsv';
+            const latencyTSVPath = 'sample/ablation_table_latency.tsv';
+            
+            // 기본 데이터, 카테고리 데이터, latency 데이터를 병렬로 로드
+            Promise.all([
+                fetch(defaultTSVPath).then(r => r.ok ? r.text() : Promise.reject(new Error(`HTTP ${r.status}`))),
+                fetch(categoryTSVPath).then(r => r.ok ? r.text() : Promise.reject(new Error(`HTTP ${r.status}`))),
+                fetch(latencyTSVPath).then(r => r.ok ? r.text() : Promise.reject(new Error(`HTTP ${r.status}`))).catch(e => {
+                    console.warn('Latency 파일 로드 실패:', e);
+                    return null; // latency 파일이 없어도 계속 진행
+                })
+            ])
+                .then(([mainText, categoryText, latencyText]) => {
+                    if (!mainText || mainText.trim().length === 0) {
+                        throw new Error('메인 파일이 비어있습니다.');
+                    }
+                    rawData = mainText;
+                    parsedData = parseTSV(rawData);
+                    console.log('parsedData 로드 완료:', parsedData?.models?.length, 'models');
+                    
+                    if (categoryText && categoryText.trim().length > 0) {
+                        try {
+                            categoryData = parseCategoryTSV(categoryText);
+                            console.log('categoryData 로드 완료:', Object.keys(categoryData || {}).length, 'models');
+                        } catch (e) {
+                            console.error('카테고리 데이터 파싱 실패:', e);
+                            console.error('에러 스택:', e.stack);
+                        }
+                    } else {
+                        console.warn('카테고리 데이터 파일이 비어있거나 로드되지 않았습니다.');
+                    }
+                    
+                    if (latencyText && latencyText.trim().length > 0) {
+                        try {
+                            latencyData = parseLatencyTSV(latencyText);
+                            console.log('latencyData 로드 완료:', Object.keys(latencyData || {}).length, 'models');
+                        } catch (e) {
+                            console.error('Latency 데이터 파싱 실패:', e);
+                            console.error('에러 스택:', e.stack);
+                        }
+                    } else {
+                        console.warn('Latency 데이터 파일이 비어있거나 로드되지 않았습니다.');
+                    }
+                    
+                    document.getElementById('fileStatus').textContent = '✓ 기본 파일 로드 완료';
+                    
+                    // 데이터 로드 후 필터를 확실히 Korean으로 설정
+                    const langFilter = document.getElementById('languageFilter');
+                    if (langFilter) {
+                        langFilter.value = 'Korean';
+                    }
+                    
+                    // 카테고리 정보 초기화
+                    updateCategoryInfo();
+                    
+                    // 모든 섹션 업데이트 (Korean 필터로)
+                    updateBaselineSection();
+                    updatePerformanceSection(); // 이 함수가 languageFilter.value를 읽어서 Korean 데이터를 표시
+                    updateReasoningSection();
+                    updateBestPerformanceSection();
+                })
+                .catch(error => {
+                    const errorMsg = `기본 파일 로드 실패: ${error.message}`;
+                    document.getElementById('fileStatus').textContent = errorMsg;
+                    console.error('기본 파일 로드 실패:', error);
+                    console.error('시도한 경로:', defaultTSVPath, categoryTSVPath, latencyTSVPath);
+                    // 사용자에게 더 명확한 메시지 표시
+                    alert('데이터 파일을 로드할 수 없습니다. 개발자 모드에서 파일을 업로드해주세요.');
+                });
+        });
+    </script>
+</body>
+</html>

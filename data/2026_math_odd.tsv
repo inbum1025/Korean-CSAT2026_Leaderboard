@@ -1,0 +1,41 @@
+Time limit	X	X	X	X	X	X	O	O	O	O	O	O
+Prompt language	English	English	English	Korean	Korean	Korean	English	English	English	Korean	Korean	Korean
+Input modality	Text	Image	Text+Image	Text	Image	Text+Image	Text	Image	Text+Image	Text	Image	Text+Image
+Model												
+GPT-5 Codex	97.8%	97.8%	100.0%	100.0%	100.0%	100.0%	97.8%	97.8%	100.0%	100.0%	100.0%	97.8%
+GPT-5	95.7%	100.0%	95.7%	95.7%	97.8%	97.8%	97.8%	95.7%	100.0%	100.0%	100.0%	97.8%
+GPT-5-mini	95.7%	91.3%	93.5%	93.5%	91.3%	93.5%	93.5%	93.5%	89.1%	93.5%	93.5%	93.5%
+GPT-5-nano	93.5%	78.3%	95.7%	89.1%	67.4%	89.1%	91.3%	87.0%	91.3%	93.5%	78.3%	87.0%
+gpt-oss-20B	93.5%			95.7%			95.7%			93.5%		
+Grok 4	93.5%	56.5%	95.7%	97.8%	52.2%	95.7%	93.5%	26.1%	95.7%	95.7%	17.4%	91.3%
+Grok 4 Fast	93.5%	32.6%	91.3%	95.7%	37.0%	97.8%	97.8%	30.4%	93.5%	95.7%	41.3%	97.8%
+Qwen3 235B A22B	89.1%	73.9%	91.3%	82.6%	69.6%	84.8%	78.3%	78.3%	73.9%	82.6%	73.9%	87.0%
+Qwen3 235B A22B Thinking 2507	93.5%	84.8%	91.3%	89.1%	97.8%	84.8%	91.3%	91.3%	89.1%	82.6%	95.7%	91.3%
+Claude 4.5 Sonnet	73.9%	67.4%	78.3%	80.4%	71.7%	82.6%	73.9%	69.6%	76.1%	73.9%	65.2%	76.1%
+Claude 4.5 Haiku	82.6%	65.2%	78.3%	80.4%	67.4%	82.6%	76.1%	60.9%	87.0%	78.3%	67.4%	78.3%
+Claude 4.1 Opus	76.1%	56.5%	73.9%	80.4%	69.6%	76.1%	78.3%	60.9%	78.3%	78.3%	71.7%	76.1%
+Gemini 2.5 Pro	95.7%	97.8%	93.5%	91.3%	93.5%	93.5%	95.7%	97.8%	93.5%	93.5%	93.5%	95.7%
+Gemini 2.5 Flash	80.4%	84.8%	80.4%	71.7%	73.9%	71.7%	73.9%	80.4%	76.1%	76.1%	73.9%	69.6%
+Deepseek R1 0528	93.5%			95.7%			97.8%			97.8%		
+Deepseek V3.2 Exp	91.3%			87.0%			84.8%			84.8%		
+GLM 4.6	87.0%			89.1%			26.1%			91.3%		
+Magistral Medium 2506	71.7%			82.6%			76.1%			69.6%		
+Magistral Medium 2506 (thinking)	84.8%			80.4%			80.4%			84.8%		
+MiniMax M2	97.8%			82.6%			91.3%			87.0%		
+Llama 4 Maverick	23.9%	65.2%	32.6%	21.7%	43.5%	28.3%	32.6%	56.5%	43.5%	28.3%	32.6%	30.4%
+Llama 3.3 Nemotron Super 49B V1.5	80.4%			80.4%			84.8%			76.1%		
+Kimi K2 0905	78.3%			78.3%			78.3%			73.9%		
+Kimi K2 Thinking	91.3%			82.6%			21.7%			17.4%		
+
+GPT-5 reasoning effort: minimal | text verbositiy: low	89.1%	82.6%	84.8%	82.6%	78.3%	80.4%	89.1%	80.4%	87.0%	82.6%	78.3%	80.4%
+GPT-5 reasoning effort: low | text verbositiy: low	97.8%	93.5%	95.7%	93.5%	93.5%	93.5%	97.8%	91.3%	97.8%	95.7%	95.7%	95.7%
+GPT-5 reasoning effort: medium | text verbositiy: low	97.8%	97.8%	97.8%	95.7%	95.7%	100.0%	95.7%	95.7%	100.0%	97.8%	97.8%	100.0%
+GPT-5 reasoning effort: high | text verbositiy: low	97.8%	95.7%	95.7%	97.8%	100.0%	97.8%	97.8%	100.0%	97.8%	97.8%	93.5%	97.8%
+GPT-5 reasoning effort: minimal | text verbositiy: medium	84.8%	82.6%	89.1%	87.0%	78.3%	80.4%	80.4%	84.8%	89.1%	82.6%	80.4%	82.6%
+GPT-5 reasoning effort: low | text verbositiy: medium	93.5%	95.7%	95.7%	93.5%	93.5%	95.7%	93.5%	95.7%	93.5%	93.5%	95.7%	100.0%
+GPT-5 reasoning effort: medium | text verbositiy: medium	95.7%	97.8%	95.7%	97.8%	97.8%	100.0%	97.8%	95.7%	100.0%	97.8%	95.7%	97.8%
+GPT-5 reasoning effort: high | text verbositiy: medium	97.8%	95.7%	97.8%	97.8%	97.8%	100.0%	97.8%	93.5%	97.8%	97.8%	100.0%	97.8%
+GPT-5 reasoning effort: minimal | text verbositiy: high	87.0%	87.0%	93.5%	87.0%	78.3%	80.4%	89.1%	84.8%	93.5%	78.3%	76.1%	80.4%
+GPT-5 reasoning effort: low | text verbositiy: high	97.8%	95.7%	95.7%	95.7%	93.5%	97.8%	91.3%	93.5%	97.8%	95.7%	93.5%	95.7%
+GPT-5 reasoning effort: medium | text verbositiy: high	100.0%	95.7%	95.7%	97.8%	97.8%	95.7%	97.8%	95.7%	97.8%	100.0%	100.0%	95.7%
+GPT-5 reasoning effort: high | text verbositiy: high	97.8%	97.8%	97.8%	100.0%	97.8%	97.8%	97.8%	97.8%	95.7%	97.8%	97.8%	97.8%
